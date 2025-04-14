@@ -13,4 +13,4 @@ SET defines=/D DEBUG /D WINDOWS_BUILD
 
 echo "Building main..."
 
-cl /MD /EHsc /Z7 /Fe"build/main" %includes% %defines% src/main.cpp %links%
+cl /MD /EHsc /Z7 /std:c++17 /Fe"build/main" %includes% %defines% src/main.cpp %links%
