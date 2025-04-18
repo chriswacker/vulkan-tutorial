@@ -1,9 +1,9 @@
 @echo off
 
-@REM echo "Building shaders..."
+echo "Building shaders..."
 
-@REM %VULKAN_SDK%/Bin/glslc.exe assets/shaders/shader.frag -o assets/shaders/shader.frag.spv
-@REM %VULKAN_SDK%/Bin/glslc.exe assets/shaders/shader.vert -o assets/shaders/shader.vert.spv
+%VULKAN_SDK%/Bin/glslc.exe shaders/shader.frag -o shaders/shader.frag.spv
+%VULKAN_SDK%/Bin/glslc.exe shaders/shader.vert -o shaders/shader.vert.spv
 
 call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
 
