@@ -89,6 +89,12 @@ struct Vertex {
     }
 };
 
+struct UniformBufferObject {
+    glm::mat4 model;
+    glm::mat4 view;
+    glm::mat4 proj;
+};
+
 const std::vector<Vertex> vertices = {
     {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}}, // top left, red
     {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}}, // top right, green
@@ -203,6 +209,7 @@ private:
         createSwapChain();
         createImageViews();
         createRenderPass();
+        createDescriptorSetLayout();
         createGraphicsPipeline();
         createFrameBuffers();
         createCommandPool();
@@ -852,6 +859,9 @@ private:
         vkQueueWaitIdle(graphicsQueue);
 
         vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+    }
+
+    void createDescriptorSetLayout() {
     }
 
     uint32_t findMemoryType(uint32_t typeFitler, VkMemoryPropertyFlags properties) {
