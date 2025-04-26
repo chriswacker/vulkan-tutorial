@@ -323,6 +323,9 @@ private:
             createInfo.pNext = nullptr;
         } 
 
+        // if macOS
+        createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+
         if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
             throw std::runtime_error("failed to create instance.");
         }
@@ -391,20 +394,13 @@ private:
     }
 
     bool isDeviceSuitable(VkPhysicalDevice device) {
-        VkPhysicalDeviceProperties deviceProperties;
-        VkPhysicalDeviceFeatures deviceFeatures;
-        vkGetPhysicalDeviceProperties(device, &deviceProperties);
-        vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
         bool extensionsSupported = checkDeviceExtensionSupport(device);
         bool swapChainAdequate = false;
         if (extensionsSupported) {
             SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
             swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
         }
-        return 
-            deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU 
-            && deviceFeatures.geometryShader
-            && queueFamilyIndices.isComplete()
+        return queueFamilyIndices.isComplete()
             && extensionsSupported
             && swapChainAdequate;
     }
@@ -1095,6 +1091,9 @@ private:
         if (enableValidationLayers) {
             extentions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }
+
+        // if macOS
+        extentions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
 
         if (!checkExtensionsSupport(extentions, &glfwExtensionCount)) {
             throw std::runtime_error("one of more extensions are not supported.");
