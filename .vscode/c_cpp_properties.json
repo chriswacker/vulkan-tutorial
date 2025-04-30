@@ -4,7 +4,8 @@
             "name": "macOS",
             "includePath": [
                 "${VULKAN_SDK}/include",
-                "/opt/homebrew/include"
+                "/opt/homebrew/include",
+                "~/include"
             ],
             "macFrameworkPath": [
                 "/System/Library/Frameworks",
