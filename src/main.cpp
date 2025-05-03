@@ -360,7 +360,7 @@ private:
             createInfo.pNext = nullptr;
         } 
 
-        // if macOS
+        // Required for macOS
         createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 
         if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
@@ -1308,7 +1308,7 @@ private:
             extentions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }
 
-        // if macOS
+        // Required for macOS
         extentions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
 
         if (!checkExtensionsSupport(extentions, &glfwExtensionCount)) {

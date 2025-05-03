@@ -15,6 +15,16 @@
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++17"
+        },
+        {
+            "name": "Windows",
+            "includePath": [
+                "${workspaceFolder}/src",
+                "${VULKAN_SDK}/Include",
+                "C:/Users/chris/Source/glfw-3.4.bin.WIN64/include",
+                "C:/Users/chris/Source/glm-1.0.1-light",
+                "C:/Users/chris/Source/stb"
+            ]
         }
     ],
     "version": 4
