@@ -23,7 +23,7 @@
                 "${VULKAN_SDK}/Include",
                 "C:/Users/chris/Source/glfw-3.4.bin.WIN64/include",
                 "C:/Users/chris/Source/glm-1.0.1-light",
-                "C:/Users/chris/Source/stb"
+                "C:/Users/chris/Source/lib"
             ]
         }
     ],
