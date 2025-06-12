@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <stdexcept>
 #include <cstdlib>
 #include <vector>
@@ -723,16 +725,30 @@ private:
     }
 
     void loadModel() {
-        vertices = {
-            {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}}, // top left, red
-            {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}}, // top right, green
-            {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}, // bottom right, blue
-            {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}, // bottom left, white
-        };
+        std::ifstream file("scripts/vertices");
 
-        indices = {
-            0, 1, 2, 2, 3, 0
-        };
+        if (!file.is_open()) {
+            throw std::runtime_error("failed to open model file");
+        }
+
+        std::string line;
+        while (std::getline(file, line)) {
+            Vertex vertex{};
+            printf(line.c_str());
+            std::istringstream iss(line);
+            float x, y;
+            if (iss >> x >> y) {
+                vertex.pos = {x, y};
+                vertex.color = {1.0f, 1.0f, 1.0f};
+                vertices.push_back(vertex);
+                indices.push_back(indices.size());
+            } else {
+                throw std::runtime_error("Invalid line");
+            }
+            
+        }
+
+        file.close();
     }
 
     void createVertexBuffer() {
