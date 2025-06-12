@@ -89,17 +89,6 @@ struct Vertex {
     }
 };
 
-const std::vector<Vertex> vertices = {
-    {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}}, // top left, red
-    {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}}, // top right, green
-    {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}, // bottom right, blue
-    {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}, // bottom left, white
-};
-
-const std::vector<uint16_t> indices = {
-    0, 1, 2, 2, 3, 0
-};
-
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
     PFN_vkDestroyDebugUtilsMessengerEXT func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
     if (func != nullptr) {
@@ -167,6 +156,9 @@ private:
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
 
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
+
     // Need multiple for multiple in-flight frames
     std::vector<VkCommandBuffer> commandBuffers;
     std::vector<VkSemaphore> imageAvailableSemaphores;
@@ -206,6 +198,7 @@ private:
         createGraphicsPipeline();
         createFrameBuffers();
         createCommandPool();
+        loadModel();
         createVertexBuffer();
         createIndexBuffer();
         createCommandBuffer();
@@ -727,6 +720,19 @@ private:
         if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
             throw std::runtime_error("failed to create command pool.");
         }
+    }
+
+    void loadModel() {
+        vertices = {
+            {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}}, // top left, red
+            {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}}, // top right, green
+            {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}, // bottom right, blue
+            {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}, // bottom left, white
+        };
+
+        indices = {
+            0, 1, 2, 2, 3, 0
+        };
     }
 
     void createVertexBuffer() {
