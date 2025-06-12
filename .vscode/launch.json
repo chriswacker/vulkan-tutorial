@@ -3,11 +3,22 @@
     "configurations": [
         {
             "name": "Windows Launch",
-            "program": "${workspaceFolder}/build/main.exe",
             "type": "cppvsdbg",
             "request": "launch",
+            "program": "${workspaceFolder}/build/main.exe",
             "cwd": "${workspaceFolder}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "preLaunchTask": "Windows Build"
+        },
+        {
+            "name": "macOS Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/main",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "lldb",
+            "preLaunchTask": "macOS Build",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
