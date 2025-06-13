@@ -424,9 +424,9 @@ private:
             swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
         }
         return 
-            deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU 
-            && deviceFeatures.geometryShader
-            && queueFamilyIndices.isComplete()
+            // deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU // remove for Apple Silicon 
+            // deviceFeatures.geometryShader
+            queueFamilyIndices.isComplete()
             && extensionsSupported
             && swapChainAdequate;
     }
@@ -759,7 +759,7 @@ private:
     }
 
     void loadModel() {
-        std::ifstream file("scripts/vertices2");
+        std::ifstream file("scripts/vertices");
 
         if (!file.is_open()) {
             throw std::runtime_error("failed to open model file");
