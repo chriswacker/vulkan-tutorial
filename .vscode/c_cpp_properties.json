@@ -3,7 +3,7 @@
         {
             "name": "macOS",
             "includePath": [
-                "${VULKAN_SDK}/include",
+                "/Users/chris/VulkanSDK/1.4.309.0/macOS/include",
                 "/opt/homebrew/include",
                 "~/include"
             ],

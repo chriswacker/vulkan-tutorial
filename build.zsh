@@ -1,3 +1,4 @@
+source /Users/chris/VulkanSDK/1.4.309.0/setup-env.sh
 glslc shaders/shader.frag -o shaders/shader.frag.spv
 glslc shaders/shader.vert -o shaders/shader.vert.spv
 
