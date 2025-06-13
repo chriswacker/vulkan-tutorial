@@ -18,8 +18,8 @@
 #include <array>
 #include <chrono>
 
-const uint32_t WIDTH = 800;
-const uint32_t HEIGHT = 600;
+const uint32_t WIDTH = 1000;
+const uint32_t HEIGHT = 1000;
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
 const std::vector<const char*> validationLayers = {
@@ -756,7 +756,7 @@ private:
     }
 
     void loadModel() {
-        std::ifstream file("scripts/vertices");
+        std::ifstream file("scripts/vertices2");
 
         if (!file.is_open()) {
             throw std::runtime_error("failed to open model file");
@@ -768,6 +768,7 @@ private:
             std::istringstream iss(line);
             float x, y;
             if (iss >> x >> y) {
+                printf("v\n");
                 vertex.pos = {x, y};
                 vertex.color = {1.0f, 1.0f, 1.0f};
                 vertices.push_back(vertex);
