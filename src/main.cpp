@@ -342,6 +342,9 @@ private:
             createInfo.pNext = nullptr;
         } 
 
+        // Required for macOS
+        createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+
         if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
             throw std::runtime_error("failed to create instance.");
         }
@@ -1233,6 +1236,9 @@ private:
         if (!checkExtensionsSupport(extentions, &glfwExtensionCount)) {
             throw std::runtime_error("one of more extensions are not supported.");
         }
+
+        // Required for macOS
+        extentions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
 
         return extentions;
     }
