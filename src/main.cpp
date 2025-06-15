@@ -247,7 +247,6 @@ private:
         createFrameBuffers();
         createCommandPool();
         loadGameState();
-        loadModel();
         createVertexBuffer();
         createIndexBuffer();
         createStorageBuffers();
@@ -807,9 +806,13 @@ private:
                 vertex.pos = { vert[0].get<float>(), vert[1].get<float>() };
                 vertex.color = {1.0f, 1.0f, 1.0f};
                 gObj.vertices.push_back(vertex);
+
+                vertices.push_back(vertex);
             }
             for (const auto& ind : obj["indices"]) {
                 gObj.indices.push_back(ind);
+
+                indices.push_back(ind);
             }
             gameState.objects.push_back(gObj);
         }
@@ -824,57 +827,7 @@ private:
             gInst.rotation = inst["rotation"];
             gameState.instances.push_back(gInst);
         }
-    }
-
-    void loadModel() {
-        // load objects.json file
-        using json = nlohmann::json;
-        std::ifstream file("models/objects.json");
-        if (!file.is_open()) {
-            throw std::runtime_error("failed to open model file");
-        }
-        json data = json::parse(file);
-
-        // for each object, load vertices into vertices member
-        // load indices into indices member
-
-        for (const auto& obj : data["objects"]) {
-            for (const auto& v : obj["vertices"]) {
-                Vertex vertex{};
-                vertex.pos = { v[0].get<float>(), v[1].get<float>() };
-                vertex.color = {1.0f, 1.0f, 1.0f};
-                vertices.push_back(vertex);
-            }
-            for (const auto& i : obj["indices"]) {
-                indices.push_back(i);
-            }
-        }
-
-        // for each instance, create model matrix, add to ssbo.modelMatrices 
-        // inc ssbo.instanceCount
-
-        // std::ifstream file("scripts/vertices");
-
-        // if (!file.is_open()) {
-        //     throw std::runtime_error("failed to open model file");
-        // }
-
-        // std::string line;
-        // while (std::getline(file, line)) {
-        //     Vertex vertex{};
-        //     std::istringstream iss(line);
-        //     float x, y;
-        //     if (iss >> x >> y) {
-        //         vertex.pos = {x, y};
-        //         vertex.color = {1.0f, 1.0f, 1.0f};
-        //         vertices.push_back(vertex);
-        //         indices.push_back(indices.size());
-        //     } else {
-        //         throw std::runtime_error("Invalid line");
-        //     }
-            
-        // }
-
+        
         file.close();
     }
 
