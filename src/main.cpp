@@ -22,6 +22,7 @@
 
 const uint32_t WIDTH = 1000;
 const uint32_t HEIGHT = 1000;
+
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
 const std::vector<const char*> validationLayers = {
@@ -96,7 +97,7 @@ struct Vertex {
 };
 
 struct UniformBufferObject {
-    glm::mat4 model;
+    glm::mat4 proj;
 };
 
 struct GameObject {
@@ -326,13 +327,17 @@ private:
     }
 
     void updateUniformBuffer(uint32_t currentImage) {
-        static auto startTime = std::chrono::high_resolution_clock::now();
+        glm::vec2 playerPos = {0.0f, 0.0f};
+        float viewportWidth = 0.5f;
+        float viewportHeight = 0.5f;
 
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+        float left = playerPos.x - viewportWidth / 2.0f;
+        float right = playerPos.x + viewportWidth / 2.0f;
+        float bottom = playerPos.y - viewportHeight / 2.0f;
+        float top = playerPos.y + viewportHeight / 2.0f;
 
         UniformBufferObject ubo{};
-        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.proj = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 
         memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
     }
