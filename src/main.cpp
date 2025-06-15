@@ -228,6 +228,7 @@ private:
     }
 
     void initVulkan() {
+        loadGameState();
         createInstance();
         setupDebugMessenger();
         createSurface();
@@ -237,16 +238,15 @@ private:
         createImageViews();
         createRenderPass();
         createUniformBuffers();
+        createStorageBuffers();
         createDescriptorSetLayout();
         createDescriptorPool();
         createDescriptorSets();
         createGraphicsPipeline();
         createFrameBuffers();
         createCommandPool();
-        loadGameState();
         createVertexBuffer();
         createIndexBuffer();
-        createStorageBuffers();
         createCommandBuffer();
         createSyncObjects();
     }
@@ -992,17 +992,21 @@ private:
         allocInfo.pSetLayouts = layouts.data();
 
         descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
+
         if (vkAllocateDescriptorSets(device, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            VkDescriptorBufferInfo bufferInfo{};
-            bufferInfo.buffer = uniformBuffers[i];
-            bufferInfo.offset = 0;
-            bufferInfo.range = sizeof(UniformBufferObject);
+            VkDescriptorBufferInfo uboBufferInfo{};
+            uboBufferInfo.buffer = uniformBuffers[i];
+            uboBufferInfo.offset = 0;
+            uboBufferInfo.range = sizeof(UniformBufferObject);
 
-            std::vector<VkWriteDescriptorSet> descriptorWrites{};
+            VkDescriptorBufferInfo storageBufferInfo{};
+            storageBufferInfo.buffer = storageBuffers[i];
+            storageBufferInfo.offset = 0;
+            storageBufferInfo.range = sizeof(glm::mat4) * gameState.instances.size();
 
             VkWriteDescriptorSet uboDescriptorWrite{};
             uboDescriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -1011,11 +1015,24 @@ private:
             uboDescriptorWrite.dstArrayElement = 0;
             uboDescriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
             uboDescriptorWrite.descriptorCount = 1;
-            uboDescriptorWrite.pBufferInfo = &bufferInfo;
+            uboDescriptorWrite.pBufferInfo = &uboBufferInfo;
             uboDescriptorWrite.pImageInfo = nullptr;
             uboDescriptorWrite.pTexelBufferView = nullptr;
 
-            vkUpdateDescriptorSets(device, 1, &uboDescriptorWrite, 0, nullptr);
+            VkWriteDescriptorSet storageDescriptorWrite{};
+            storageDescriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            storageDescriptorWrite.dstSet = descriptorSets[i];
+            storageDescriptorWrite.dstBinding = 1;
+            storageDescriptorWrite.dstArrayElement = 0;
+            storageDescriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+            storageDescriptorWrite.descriptorCount = 1;
+            storageDescriptorWrite.pBufferInfo = &storageBufferInfo;
+            storageDescriptorWrite.pImageInfo = nullptr;
+            storageDescriptorWrite.pTexelBufferView = nullptr;
+
+            std::vector<VkWriteDescriptorSet> descriptorWrites{ uboDescriptorWrite, storageDescriptorWrite };
+
+            vkUpdateDescriptorSets(device, descriptorWrites.size(), descriptorWrites.data(), 0, nullptr);
         }
     }
 
@@ -1402,6 +1419,8 @@ private:
         cleanupSwapChain();
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            vkDestroyBuffer(device, storageBuffers[i], nullptr);
+            vkFreeMemory(device, storageBuffersMemory[i], nullptr);
             vkDestroyBuffer(device, uniformBuffers[i], nullptr);
             vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
         }
