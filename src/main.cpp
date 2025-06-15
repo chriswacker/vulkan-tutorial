@@ -280,6 +280,7 @@ private:
         recordCommandBuffer(commandBuffers[currentFrame], imageIndex);
 
         updateUniformBuffer(currentFrame);
+        updateStorageBuffer(currentFrame);
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -337,6 +338,20 @@ private:
     }
 
     void updateStorageBuffer(uint32_t currentImage) {
+        static auto startTime = std::chrono::high_resolution_clock::now();
+
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+        std::vector<glm::mat4> modelMatrices{};
+        for (GameInstance& inst : gameState.instances) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(inst.position, 0.0f));
+            model = glm::rotate(model, glm::radians(time * inst.rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+            modelMatrices.push_back(model);
+        }
+        
+        memcpy(storageBuffersMapped[currentImage], modelMatrices.data(), sizeof(glm::mat4) * modelMatrices.size());
     }
 
     void createInstance() {
@@ -1194,7 +1209,7 @@ private:
 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
 
-        vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+        vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), gameState.instances.size(), 0, 0, 0);
 
         vkCmdEndRenderPass(commandBuffer);
 
