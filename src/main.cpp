@@ -99,11 +99,6 @@ struct UniformBufferObject {
     glm::mat4 model;
 };
 
-struct StorageBufferObject {
-    uint32_t instanceCount;
-    std::vector<glm::mat4> modelMatrices;
-};
-
 struct GameObject {
     uint32_t id;
     std::string name;
@@ -192,7 +187,6 @@ private:
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
     VkDescriptorPool descriptorPool;
-    StorageBufferObject ssbo;
 
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -206,6 +200,9 @@ private:
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
     std::vector<void*> uniformBuffersMapped;
+    std::vector<VkBuffer> storageBuffers;
+    std::vector<VkDeviceMemory> storageBuffersMemory;
+    std::vector<void*> storageBuffersMapped;
 
     std::vector<VkImage> swapChainImages;
     std::vector<VkImageView> swapChainImageViews;
@@ -789,7 +786,6 @@ private:
     }
 
     void loadGameState() {
-        // load objects.json file
         using json = nlohmann::json;
         std::ifstream file("models/objects.json");
         if (!file.is_open()) {
@@ -916,6 +912,23 @@ private:
     }
 
     void createStorageBuffers() {
+        VkDeviceSize bufferSize = sizeof(glm::mat4) * gameState.instances.size();
+
+        storageBuffers.resize(MAX_FRAMES_IN_FLIGHT);
+        storageBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
+        storageBuffersMapped.resize(MAX_FRAMES_IN_FLIGHT);
+
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            createBuffer(
+                bufferSize, 
+                VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, 
+                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
+                storageBuffers[i], 
+                storageBuffersMemory[i]
+            );
+
+            vkMapMemory(device, storageBuffersMemory[i], 0, bufferSize, 0, &storageBuffersMapped[i]);
+        }
     }
 
     void createDescriptorSetLayout() {
@@ -926,10 +939,22 @@ private:
         uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
         uboLayoutBinding.pImmutableSamplers = nullptr;
 
+        VkDescriptorSetLayoutBinding storageLayoutBinding{};
+        storageLayoutBinding.binding = 1;
+        storageLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        storageLayoutBinding.descriptorCount = 1;
+        storageLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        storageLayoutBinding.pImmutableSamplers = nullptr;
+
+        std::vector<VkDescriptorSetLayoutBinding> layoutBindings { 
+            uboLayoutBinding, 
+            storageLayoutBinding 
+        };
+
         VkDescriptorSetLayoutCreateInfo layoutInfo{};
         layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        layoutInfo.bindingCount = 1;
-        layoutInfo.pBindings = &uboLayoutBinding;
+        layoutInfo.bindingCount = layoutBindings.size();
+        layoutInfo.pBindings = layoutBindings.data();
 
         if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor set layout!");
@@ -937,14 +962,20 @@ private:
     }
 
     void createDescriptorPool() {
-        VkDescriptorPoolSize poolSize{};
-        poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+        VkDescriptorPoolSize uboPoolSize{};
+        uboPoolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        uboPoolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+
+        VkDescriptorPoolSize storagePoolSize{};
+        storagePoolSize.type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        storagePoolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+
+        std::vector<VkDescriptorPoolSize> poolSizes { uboPoolSize, storagePoolSize };
 
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-        poolInfo.poolSizeCount = 1;
-        poolInfo.pPoolSizes = &poolSize;
+        poolInfo.poolSizeCount = poolSizes.size();
+        poolInfo.pPoolSizes = poolSizes.data();
         poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 
         if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
@@ -971,18 +1002,20 @@ private:
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(UniformBufferObject);
 
-            VkWriteDescriptorSet descriptorWrite{};
-            descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrite.dstSet = descriptorSets[i];
-            descriptorWrite.dstBinding = 0;
-            descriptorWrite.dstArrayElement = 0;
-            descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-            descriptorWrite.descriptorCount = 1;
-            descriptorWrite.pBufferInfo = &bufferInfo;
-            descriptorWrite.pImageInfo = nullptr;
-            descriptorWrite.pTexelBufferView = nullptr;
+            std::vector<VkWriteDescriptorSet> descriptorWrites{};
 
-            vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+            VkWriteDescriptorSet uboDescriptorWrite{};
+            uboDescriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            uboDescriptorWrite.dstSet = descriptorSets[i];
+            uboDescriptorWrite.dstBinding = 0;
+            uboDescriptorWrite.dstArrayElement = 0;
+            uboDescriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            uboDescriptorWrite.descriptorCount = 1;
+            uboDescriptorWrite.pBufferInfo = &bufferInfo;
+            uboDescriptorWrite.pImageInfo = nullptr;
+            uboDescriptorWrite.pTexelBufferView = nullptr;
+
+            vkUpdateDescriptorSets(device, 1, &uboDescriptorWrite, 0, nullptr);
         }
     }
 
