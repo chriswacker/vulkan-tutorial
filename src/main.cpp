@@ -94,7 +94,7 @@ struct Vertex {
 };
 
 struct UniformBufferObject {
-    glm::mat4 spin;
+    glm::mat4 model;
 };
 
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
@@ -304,7 +304,7 @@ private:
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
         UniformBufferObject ubo{};
-        ubo.spin = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
         memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
     }
@@ -756,7 +756,7 @@ private:
     }
 
     void loadModel() {
-        std::ifstream file("scripts/vertices2");
+        std::ifstream file("scripts/vertices");
 
         if (!file.is_open()) {
             throw std::runtime_error("failed to open model file");
@@ -768,7 +768,6 @@ private:
             std::istringstream iss(line);
             float x, y;
             if (iss >> x >> y) {
-                printf("v\n");
                 vertex.pos = {x, y};
                 vertex.color = {1.0f, 1.0f, 1.0f};
                 vertices.push_back(vertex);
@@ -866,6 +865,9 @@ private:
         }
     }
 
+    void createStorageBuffers() {
+    }
+
     void createDescriptorSetLayout() {
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
         uboLayoutBinding.binding = 0;
@@ -882,7 +884,6 @@ private:
         if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor set layout!");
         }
-
     }
 
     void createDescriptorPool() {

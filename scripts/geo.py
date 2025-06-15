@@ -35,6 +35,9 @@ def test(verts, r):
 
 r = float(argv[1])
 sides = int(argv[2])
-verts = get_eq_poly_verts(r, sides)
-for v in verts:
-    print(v[0], v[1])
+x_offset = float(argv[3])
+y_offset = float(argv[4])
+verts = get_eq_poly_verts(r, sides, x_offset, y_offset)
+with open("vertices", "a") as f:
+    for v in verts:
+        f.write(f"{v[0]} {v[1]}\n")
