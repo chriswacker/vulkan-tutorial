@@ -1,0 +1,28 @@
+{
+    "objects": [
+        {
+            "id": 0,
+            "name": "small asteroids",
+            "vertices": [
+                [ 0.2, 0.0 ],
+                [ -0.1, 0.17320508075688776 ],
+                [ -0.1, -0.1732050807568877 ]
+            ],
+            "indices": [ 0, 1, 2 ]
+        }
+    ],
+    "instances": [
+        { 
+            "id": 0, 
+            "position": [-0.5, 0], 
+            "rotation": 90.0, 
+            "velocity": [0, 0] 
+        },
+        { 
+            "id": 0, 
+            "position": [0.5, 0], 
+            "rotation": -90.0, 
+            "velocity": [0, 0] 
+        }
+    ]
+}

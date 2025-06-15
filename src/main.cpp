@@ -97,6 +97,11 @@ struct UniformBufferObject {
     glm::mat4 model;
 };
 
+struct StorageBufferObject {
+    uint32_t instanceCount;
+    std::vector<glm::mat4> modelMatrices;
+};
+
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
     PFN_vkDestroyDebugUtilsMessengerEXT func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
     if (func != nullptr) {
@@ -166,6 +171,7 @@ private:
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
     VkDescriptorPool descriptorPool;
+    StorageBufferObject ssbo;
 
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -220,6 +226,7 @@ private:
         loadModel();
         createVertexBuffer();
         createIndexBuffer();
+        createStorageBuffers();
         createCommandBuffer();
         createSyncObjects();
     }
@@ -307,6 +314,9 @@ private:
         ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
         memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
+    }
+
+    void updateStorageBuffer(uint32_t currentImage) {
     }
 
     void createInstance() {
@@ -756,6 +766,14 @@ private:
     }
 
     void loadModel() {
+        // load objects.json file
+
+        // for each object, load vertices into vertices member
+        // load indices into indices member
+
+        // for each instance, create model matrix, add to ssbo.modelMatrices 
+        // inc ssbo.instanceCount
+
         std::ifstream file("scripts/vertices");
 
         if (!file.is_open()) {
