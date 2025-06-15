@@ -18,8 +18,11 @@
 #include <array>
 #include <chrono>
 
+#include <json.hpp>
+
 const uint32_t WIDTH = 1000;
 const uint32_t HEIGHT = 1000;
+
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
 const std::vector<const char*> validationLayers = {
@@ -94,7 +97,26 @@ struct Vertex {
 };
 
 struct UniformBufferObject {
-    glm::mat4 spin;
+    glm::mat4 proj;
+};
+
+struct GameObject {
+    uint32_t id;
+    std::string name;
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
+};
+
+struct GameInstance {
+    uint32_t objectId;
+    glm::vec2 position;
+    float rotation;
+    glm::vec2 velocity;
+};
+
+struct GameState {
+    std::vector<GameObject> objects;
+    std::vector<GameInstance> instances;
 };
 
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
@@ -179,10 +201,15 @@ private:
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
     std::vector<void*> uniformBuffersMapped;
+    std::vector<VkBuffer> storageBuffers;
+    std::vector<VkDeviceMemory> storageBuffersMemory;
+    std::vector<void*> storageBuffersMapped;
 
     std::vector<VkImage> swapChainImages;
     std::vector<VkImageView> swapChainImageViews;
     std::vector<VkFramebuffer> swapChainFramebuffers;
+
+    GameState gameState;
 
     bool framebufferResized = false;
 
@@ -202,6 +229,7 @@ private:
     }
 
     void initVulkan() {
+        loadGameState();
         createInstance();
         setupDebugMessenger();
         createSurface();
@@ -211,13 +239,13 @@ private:
         createImageViews();
         createRenderPass();
         createUniformBuffers();
+        createStorageBuffers();
         createDescriptorSetLayout();
         createDescriptorPool();
         createDescriptorSets();
         createGraphicsPipeline();
         createFrameBuffers();
         createCommandPool();
-        loadModel();
         createVertexBuffer();
         createIndexBuffer();
         createCommandBuffer();
@@ -253,6 +281,7 @@ private:
         recordCommandBuffer(commandBuffers[currentFrame], imageIndex);
 
         updateUniformBuffer(currentFrame);
+        updateStorageBuffer(currentFrame);
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -298,15 +327,36 @@ private:
     }
 
     void updateUniformBuffer(uint32_t currentImage) {
+        glm::vec2 playerPos = {0.0f, 0.0f};
+        float viewportWidth = 0.5f;
+        float viewportHeight = 0.5f;
+
+        float left = playerPos.x - viewportWidth / 2.0f;
+        float right = playerPos.x + viewportWidth / 2.0f;
+        float bottom = playerPos.y - viewportHeight / 2.0f;
+        float top = playerPos.y + viewportHeight / 2.0f;
+
+        UniformBufferObject ubo{};
+        ubo.proj = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
+
+        memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
+    }
+
+    void updateStorageBuffer(uint32_t currentImage) {
         static auto startTime = std::chrono::high_resolution_clock::now();
 
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-        UniformBufferObject ubo{};
-        ubo.spin = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-
-        memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
+        std::vector<glm::mat4> modelMatrices{};
+        for (GameInstance& inst : gameState.instances) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(inst.position, 0.0f));
+            model = glm::rotate(model, glm::radians(time * inst.rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+            modelMatrices.push_back(model);
+        }
+        
+        memcpy(storageBuffersMapped[currentImage], modelMatrices.data(), sizeof(glm::mat4) * modelMatrices.size());
     }
 
     void createInstance() {
@@ -758,30 +808,45 @@ private:
         }
     }
 
-    void loadModel() {
-        std::ifstream file("scripts/vertices");
-
+    void loadGameState() {
+        using json = nlohmann::json;
+        std::ifstream file("models/objects.json");
         if (!file.is_open()) {
             throw std::runtime_error("failed to open model file");
         }
+        json data = json::parse(file);
 
-        std::string line;
-        while (std::getline(file, line)) {
-            Vertex vertex{};
-            std::istringstream iss(line);
-            float x, y;
-            if (iss >> x >> y) {
-                printf("v\n");
-                vertex.pos = {x, y};
+        for (const auto& obj : data["objects"]) {
+            GameObject gObj;
+            gObj.id = obj["id"];
+            gObj.name = obj["name"];
+            for (const auto& vert : obj["vertices"]) {
+                Vertex vertex{};
+                vertex.pos = { vert[0].get<float>(), vert[1].get<float>() };
                 vertex.color = {1.0f, 1.0f, 1.0f};
+                gObj.vertices.push_back(vertex);
+
                 vertices.push_back(vertex);
-                indices.push_back(indices.size());
-            } else {
-                throw std::runtime_error("Invalid line");
             }
-            
+            for (const auto& ind : obj["indices"]) {
+                gObj.indices.push_back(ind);
+
+                indices.push_back(ind);
+            }
+            gameState.objects.push_back(gObj);
         }
 
+        for (const auto& inst : data["instances"]) {
+            GameInstance gInst{};
+            gInst.objectId = inst["objectId"];
+            auto pos = inst["position"];
+            auto vel = inst["velocity"];
+            gInst.position = { pos[0].get<float>(), pos[1].get<float>() };
+            gInst.velocity = { vel[0].get<float>(), vel[1].get<float>() };
+            gInst.rotation = inst["rotation"];
+            gameState.instances.push_back(gInst);
+        }
+        
         file.close();
     }
 
@@ -869,6 +934,26 @@ private:
         }
     }
 
+    void createStorageBuffers() {
+        VkDeviceSize bufferSize = sizeof(glm::mat4) * gameState.instances.size();
+
+        storageBuffers.resize(MAX_FRAMES_IN_FLIGHT);
+        storageBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
+        storageBuffersMapped.resize(MAX_FRAMES_IN_FLIGHT);
+
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            createBuffer(
+                bufferSize, 
+                VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, 
+                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
+                storageBuffers[i], 
+                storageBuffersMemory[i]
+            );
+
+            vkMapMemory(device, storageBuffersMemory[i], 0, bufferSize, 0, &storageBuffersMapped[i]);
+        }
+    }
+
     void createDescriptorSetLayout() {
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
         uboLayoutBinding.binding = 0;
@@ -877,26 +962,43 @@ private:
         uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
         uboLayoutBinding.pImmutableSamplers = nullptr;
 
+        VkDescriptorSetLayoutBinding storageLayoutBinding{};
+        storageLayoutBinding.binding = 1;
+        storageLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        storageLayoutBinding.descriptorCount = 1;
+        storageLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        storageLayoutBinding.pImmutableSamplers = nullptr;
+
+        std::vector<VkDescriptorSetLayoutBinding> layoutBindings { 
+            uboLayoutBinding, 
+            storageLayoutBinding 
+        };
+
         VkDescriptorSetLayoutCreateInfo layoutInfo{};
         layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        layoutInfo.bindingCount = 1;
-        layoutInfo.pBindings = &uboLayoutBinding;
+        layoutInfo.bindingCount = layoutBindings.size();
+        layoutInfo.pBindings = layoutBindings.data();
 
         if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor set layout!");
         }
-
     }
 
     void createDescriptorPool() {
-        VkDescriptorPoolSize poolSize{};
-        poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+        VkDescriptorPoolSize uboPoolSize{};
+        uboPoolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        uboPoolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+
+        VkDescriptorPoolSize storagePoolSize{};
+        storagePoolSize.type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        storagePoolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+
+        std::vector<VkDescriptorPoolSize> poolSizes { uboPoolSize, storagePoolSize };
 
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-        poolInfo.poolSizeCount = 1;
-        poolInfo.pPoolSizes = &poolSize;
+        poolInfo.poolSizeCount = poolSizes.size();
+        poolInfo.pPoolSizes = poolSizes.data();
         poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 
         if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
@@ -913,28 +1015,47 @@ private:
         allocInfo.pSetLayouts = layouts.data();
 
         descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
+
         if (vkAllocateDescriptorSets(device, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            VkDescriptorBufferInfo bufferInfo{};
-            bufferInfo.buffer = uniformBuffers[i];
-            bufferInfo.offset = 0;
-            bufferInfo.range = sizeof(UniformBufferObject);
+            VkDescriptorBufferInfo uboBufferInfo{};
+            uboBufferInfo.buffer = uniformBuffers[i];
+            uboBufferInfo.offset = 0;
+            uboBufferInfo.range = sizeof(UniformBufferObject);
 
-            VkWriteDescriptorSet descriptorWrite{};
-            descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrite.dstSet = descriptorSets[i];
-            descriptorWrite.dstBinding = 0;
-            descriptorWrite.dstArrayElement = 0;
-            descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-            descriptorWrite.descriptorCount = 1;
-            descriptorWrite.pBufferInfo = &bufferInfo;
-            descriptorWrite.pImageInfo = nullptr;
-            descriptorWrite.pTexelBufferView = nullptr;
+            VkDescriptorBufferInfo storageBufferInfo{};
+            storageBufferInfo.buffer = storageBuffers[i];
+            storageBufferInfo.offset = 0;
+            storageBufferInfo.range = sizeof(glm::mat4) * gameState.instances.size();
 
-            vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+            VkWriteDescriptorSet uboDescriptorWrite{};
+            uboDescriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            uboDescriptorWrite.dstSet = descriptorSets[i];
+            uboDescriptorWrite.dstBinding = 0;
+            uboDescriptorWrite.dstArrayElement = 0;
+            uboDescriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            uboDescriptorWrite.descriptorCount = 1;
+            uboDescriptorWrite.pBufferInfo = &uboBufferInfo;
+            uboDescriptorWrite.pImageInfo = nullptr;
+            uboDescriptorWrite.pTexelBufferView = nullptr;
+
+            VkWriteDescriptorSet storageDescriptorWrite{};
+            storageDescriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            storageDescriptorWrite.dstSet = descriptorSets[i];
+            storageDescriptorWrite.dstBinding = 1;
+            storageDescriptorWrite.dstArrayElement = 0;
+            storageDescriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+            storageDescriptorWrite.descriptorCount = 1;
+            storageDescriptorWrite.pBufferInfo = &storageBufferInfo;
+            storageDescriptorWrite.pImageInfo = nullptr;
+            storageDescriptorWrite.pTexelBufferView = nullptr;
+
+            std::vector<VkWriteDescriptorSet> descriptorWrites{ uboDescriptorWrite, storageDescriptorWrite };
+
+            vkUpdateDescriptorSets(device, descriptorWrites.size(), descriptorWrites.data(), 0, nullptr);
         }
     }
 
@@ -1096,7 +1217,7 @@ private:
 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
 
-        vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+        vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), gameState.instances.size(), 0, 0, 0);
 
         vkCmdEndRenderPass(commandBuffer);
 
@@ -1324,6 +1445,8 @@ private:
         cleanupSwapChain();
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            vkDestroyBuffer(device, storageBuffers[i], nullptr);
+            vkFreeMemory(device, storageBuffersMemory[i], nullptr);
             vkDestroyBuffer(device, uniformBuffers[i], nullptr);
             vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
         }

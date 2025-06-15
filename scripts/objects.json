@@ -1,0 +1,4361 @@
+{
+  "objects": [
+    {
+      "id": 0,
+      "name": "small",
+      "vertices": [
+        [
+          0.1,
+          0.0
+        ],
+        [
+          -0.04999999999999998,
+          0.08660254037844388
+        ],
+        [
+          -0.050000000000000044,
+          -0.08660254037844385
+        ]
+      ],
+      "indices": [
+        0,
+        1,
+        2
+      ]
+    }
+  ],
+  "instances": [
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.8,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.6,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.4,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.2,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -1.0,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.8,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.6,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.4,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        -0.2,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.0,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.2,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.4,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.6,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        0.8,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.0,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.2,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.4,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.6,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        -1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        -1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        -1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        -1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        -1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        -0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        -0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        -0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        -0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        0.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        0.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        0.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        0.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        0.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        1.0
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        1.2
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        1.4
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        1.6
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    },
+    {
+      "objectId": 0,
+      "position": [
+        1.8,
+        1.8
+      ],
+      "rotation": 90.0,
+      "velocity": [
+        0,
+        0
+      ]
+    }
+  ]
+}
