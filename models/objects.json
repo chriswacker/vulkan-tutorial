@@ -13,13 +13,13 @@
     ],
     "instances": [
         { 
-            "id": 0, 
+            "objectId": 0, 
             "position": [-0.5, 0], 
             "rotation": 90.0, 
             "velocity": [0, 0] 
         },
         { 
-            "id": 0, 
+            "objectId": 0, 
             "position": [0.5, 0], 
             "rotation": -90.0, 
             "velocity": [0, 0] 

@@ -18,6 +18,8 @@
 #include <array>
 #include <chrono>
 
+#include <json.hpp>
+
 const uint32_t WIDTH = 1000;
 const uint32_t HEIGHT = 1000;
 const int MAX_FRAMES_IN_FLIGHT = 2;
@@ -100,6 +102,25 @@ struct UniformBufferObject {
 struct StorageBufferObject {
     uint32_t instanceCount;
     std::vector<glm::mat4> modelMatrices;
+};
+
+struct GameObject {
+    uint32_t id;
+    std::string name;
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
+};
+
+struct GameInstance {
+    uint32_t objectId;
+    glm::vec2 position;
+    float rotation;
+    glm::vec2 velocity;
+};
+
+struct GameState {
+    std::vector<GameObject> objects;
+    std::vector<GameInstance> instances;
 };
 
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
@@ -190,6 +211,8 @@ private:
     std::vector<VkImageView> swapChainImageViews;
     std::vector<VkFramebuffer> swapChainFramebuffers;
 
+    GameState gameState;
+
     bool framebufferResized = false;
 
     void initWindow() {
@@ -223,6 +246,7 @@ private:
         createGraphicsPipeline();
         createFrameBuffers();
         createCommandPool();
+        loadGameState();
         loadModel();
         createVertexBuffer();
         createIndexBuffer();
@@ -765,36 +789,91 @@ private:
         }
     }
 
+    void loadGameState() {
+        // load objects.json file
+        using json = nlohmann::json;
+        std::ifstream file("models/objects.json");
+        if (!file.is_open()) {
+            throw std::runtime_error("failed to open model file");
+        }
+        json data = json::parse(file);
+
+        for (const auto& obj : data["objects"]) {
+            GameObject gObj;
+            gObj.id = obj["id"];
+            gObj.name = obj["name"];
+            for (const auto& vert : obj["vertices"]) {
+                Vertex vertex{};
+                vertex.pos = { vert[0].get<float>(), vert[1].get<float>() };
+                vertex.color = {1.0f, 1.0f, 1.0f};
+                gObj.vertices.push_back(vertex);
+            }
+            for (const auto& ind : obj["indices"]) {
+                gObj.indices.push_back(ind);
+            }
+            gameState.objects.push_back(gObj);
+        }
+
+        for (const auto& inst : data["instances"]) {
+            GameInstance gInst{};
+            gInst.objectId = inst["objectId"];
+            auto pos = inst["position"];
+            auto vel = inst["velocity"];
+            gInst.position = { pos[0].get<float>(), pos[1].get<float>() };
+            gInst.velocity = { vel[0].get<float>(), vel[1].get<float>() };
+            gInst.rotation = inst["rotation"];
+            gameState.instances.push_back(gInst);
+        }
+    }
+
     void loadModel() {
         // load objects.json file
+        using json = nlohmann::json;
+        std::ifstream file("models/objects.json");
+        if (!file.is_open()) {
+            throw std::runtime_error("failed to open model file");
+        }
+        json data = json::parse(file);
 
         // for each object, load vertices into vertices member
         // load indices into indices member
 
+        for (const auto& obj : data["objects"]) {
+            for (const auto& v : obj["vertices"]) {
+                Vertex vertex{};
+                vertex.pos = { v[0].get<float>(), v[1].get<float>() };
+                vertex.color = {1.0f, 1.0f, 1.0f};
+                vertices.push_back(vertex);
+            }
+            for (const auto& i : obj["indices"]) {
+                indices.push_back(i);
+            }
+        }
+
         // for each instance, create model matrix, add to ssbo.modelMatrices 
         // inc ssbo.instanceCount
 
-        std::ifstream file("scripts/vertices");
+        // std::ifstream file("scripts/vertices");
 
-        if (!file.is_open()) {
-            throw std::runtime_error("failed to open model file");
-        }
+        // if (!file.is_open()) {
+        //     throw std::runtime_error("failed to open model file");
+        // }
 
-        std::string line;
-        while (std::getline(file, line)) {
-            Vertex vertex{};
-            std::istringstream iss(line);
-            float x, y;
-            if (iss >> x >> y) {
-                vertex.pos = {x, y};
-                vertex.color = {1.0f, 1.0f, 1.0f};
-                vertices.push_back(vertex);
-                indices.push_back(indices.size());
-            } else {
-                throw std::runtime_error("Invalid line");
-            }
+        // std::string line;
+        // while (std::getline(file, line)) {
+        //     Vertex vertex{};
+        //     std::istringstream iss(line);
+        //     float x, y;
+        //     if (iss >> x >> y) {
+        //         vertex.pos = {x, y};
+        //         vertex.color = {1.0f, 1.0f, 1.0f};
+        //         vertices.push_back(vertex);
+        //         indices.push_back(indices.size());
+        //     } else {
+        //         throw std::runtime_error("Invalid line");
+        //     }
             
-        }
+        // }
 
         file.close();
     }
