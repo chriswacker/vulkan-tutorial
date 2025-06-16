@@ -115,8 +115,14 @@ struct GameInstance {
 };
 
 struct GameState {
+    glm::vec2 playerPos;
     std::vector<GameObject> objects;
     std::vector<GameInstance> instances;
+};
+
+struct InputState {
+    glm::vec2 mousePos;
+    bool keys[GLFW_KEY_LAST];
 };
 
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
@@ -209,16 +215,20 @@ private:
     std::vector<VkImageView> swapChainImageViews;
     std::vector<VkFramebuffer> swapChainFramebuffers;
 
+    std::chrono::steady_clock::time_point lastFrameTime;
+    float delta = 0;
+
     GameState gameState;
+    InputState inputState;
 
     bool framebufferResized = false;
 
     void initWindow() {
         glfwInit();
-
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
         window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
+
         glfwSetWindowUserPointer(window, this);
         glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
     }
@@ -256,12 +266,14 @@ private:
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
             drawFrame();
+            updateDelta();
         }
         
         vkDeviceWaitIdle(device);
     }
 
     void drawFrame() {
+        lastFrameTime = std::chrono::high_resolution_clock::now();
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex;
@@ -280,6 +292,8 @@ private:
         vkResetCommandBuffer(commandBuffers[currentFrame], 0);
         recordCommandBuffer(commandBuffers[currentFrame], imageIndex);
 
+        updateInputState();
+        updateGameState();
         updateUniformBuffer(currentFrame);
         updateStorageBuffer(currentFrame);
 
@@ -315,7 +329,6 @@ private:
 
         result = vkQueuePresentKHR(presentQueue, &presentInfo);
 
-
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
             framebufferResized = false;
             recreateSwapChain();
@@ -325,16 +338,20 @@ private:
 
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     }
+     
+    void updateDelta() {
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        delta = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastFrameTime).count();
+    }
 
     void updateUniformBuffer(uint32_t currentImage) {
-        glm::vec2 playerPos = {50.0f, 50.0f};
         float viewportWidth = 20.0f;
         float viewportHeight = 20.0f;
 
-        float left = playerPos.x - viewportWidth / 2.0f;
-        float right = playerPos.x + viewportWidth / 2.0f;
-        float bottom = playerPos.y - viewportHeight / 2.0f;
-        float top = playerPos.y + viewportHeight / 2.0f;
+        float left = gameState.playerPos.x - viewportWidth / 2.0f;
+        float right = gameState.playerPos.x + viewportWidth / 2.0f;
+        float bottom = gameState.playerPos.y - viewportHeight / 2.0f;
+        float top = gameState.playerPos.y + viewportHeight / 2.0f;
 
         UniformBufferObject ubo{};
         ubo.proj = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
@@ -344,7 +361,6 @@ private:
 
     void updateStorageBuffer(uint32_t currentImage) {
         static auto startTime = std::chrono::high_resolution_clock::now();
-
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
@@ -357,6 +373,36 @@ private:
         }
         
         memcpy(storageBuffersMapped[currentImage], modelMatrices.data(), sizeof(glm::mat4) * modelMatrices.size());
+    }
+
+    void updateInputState() {
+        for (int key = 0; key < GLFW_KEY_LAST; ++key) {
+            inputState.keys[key] = glfwGetKey(window, key) == GLFW_PRESS;
+        }
+        double x, y;
+        glfwGetCursorPos(window, &x, &y);
+        inputState.mousePos = glm::vec2(x, y);
+    }
+    
+    void updateGameState() {
+        // std::cout << delta << std::endl;
+
+        float speed = 10.0;
+
+        if (inputState.keys[GLFW_KEY_A]) {
+            gameState.playerPos.x -= speed * delta;
+        } 
+        if (inputState.keys[GLFW_KEY_D]) {
+            gameState.playerPos.x += speed * delta;
+        }  
+        if (inputState.keys[GLFW_KEY_W]) {
+            gameState.playerPos.y -= speed * delta;
+        }  
+        if (inputState.keys[GLFW_KEY_S]) {
+            gameState.playerPos.y += speed * delta;
+        }
+
+        // std::cout << gameState.playerPos.x << " " << gameState.playerPos.y << std::endl;
     }
 
     void createInstance() {
@@ -815,6 +861,8 @@ private:
             throw std::runtime_error("failed to open model file");
         }
         json data = json::parse(file);
+
+        gameState.playerPos = { data["playerPos"][0].get<float>(), data["playerPos"][1].get<float>() };
 
         for (const auto& obj : data["objects"]) {
             GameObject gObj;
