@@ -327,9 +327,9 @@ private:
     }
 
     void updateUniformBuffer(uint32_t currentImage) {
-        glm::vec2 playerPos = {0.0f, 0.0f};
-        float viewportWidth = 0.5f;
-        float viewportHeight = 0.5f;
+        glm::vec2 playerPos = {50.0f, 50.0f};
+        float viewportWidth = 20.0f;
+        float viewportHeight = 20.0f;
 
         float left = playerPos.x - viewportWidth / 2.0f;
         float right = playerPos.x + viewportWidth / 2.0f;

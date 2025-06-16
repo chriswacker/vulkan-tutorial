@@ -1,6 +1,5 @@
 import json
 from random import random
-from sys import argv
 from math import sqrt, sin, cos, radians, isclose
 
 
@@ -37,7 +36,7 @@ def test(verts, r):
         i += 1
 
 
-r = 0.1
+r = 5
 sides = 3
 verts = get_eq_poly_verts(r, sides)
 out = {
@@ -53,10 +52,10 @@ out = {
 
 instances = []
 
-for i in range(-8, 10, 2):
-    x = i/10
-    for j in range(-8, 10, 2):
-        y = j/10
+for i in range(10, 100, 10):
+    x = i
+    for j in range(10, 100, 10):
+        y = j
         instances.append({
             "objectId": 0,
             "position": [x, y],
