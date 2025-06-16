@@ -100,6 +100,13 @@ struct UniformBufferObject {
     glm::mat4 proj;
 };
 
+struct GamePlayer {
+    glm::vec2 position;
+    std::vector<Vertex> vertices;
+    float rotation;
+    glm::vec2 velocity;
+};
+
 struct GameObject {
     uint32_t id;
     std::string name;
@@ -115,7 +122,7 @@ struct GameInstance {
 };
 
 struct GameState {
-    glm::vec2 playerPos;
+    GamePlayer player;
     std::vector<GameObject> objects;
     std::vector<GameInstance> instances;
 };
@@ -348,10 +355,10 @@ private:
         float viewportWidth = 20.0f;
         float viewportHeight = 20.0f;
 
-        float left = gameState.playerPos.x - viewportWidth / 2.0f;
-        float right = gameState.playerPos.x + viewportWidth / 2.0f;
-        float bottom = gameState.playerPos.y - viewportHeight / 2.0f;
-        float top = gameState.playerPos.y + viewportHeight / 2.0f;
+        float left = gameState.player.position.x - viewportWidth / 2.0f;
+        float right = gameState.player.position.x + viewportWidth / 2.0f;
+        float bottom = gameState.player.position.y - viewportHeight / 2.0f;
+        float top = gameState.player.position.y + viewportHeight / 2.0f;
 
         UniformBufferObject ubo{};
         ubo.proj = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
@@ -390,16 +397,16 @@ private:
         float speed = 10.0;
 
         if (inputState.keys[GLFW_KEY_A]) {
-            gameState.playerPos.x -= speed * delta;
+            gameState.player.position.x -= speed * delta;
         } 
         if (inputState.keys[GLFW_KEY_D]) {
-            gameState.playerPos.x += speed * delta;
+            gameState.player.position.x += speed * delta;
         }  
         if (inputState.keys[GLFW_KEY_W]) {
-            gameState.playerPos.y -= speed * delta;
+            gameState.player.position.y -= speed * delta;
         }  
         if (inputState.keys[GLFW_KEY_S]) {
-            gameState.playerPos.y += speed * delta;
+            gameState.player.position.y += speed * delta;
         }
 
         // std::cout << gameState.playerPos.x << " " << gameState.playerPos.y << std::endl;
@@ -862,7 +869,20 @@ private:
         }
         json data = json::parse(file);
 
-        gameState.playerPos = { data["playerPos"][0].get<float>(), data["playerPos"][1].get<float>() };
+        json jPlayer = data["player"];
+        GamePlayer player{};
+        player.position = { jPlayer["position"][0].get<float>(), jPlayer["position"][1].get<float>() };
+        player.rotation = jPlayer["rotation"].get<float>();
+        player.velocity = { jPlayer["velocity"][0].get<float>(), jPlayer["velocity"][1].get<float>() };
+
+        for (const auto& vert : jPlayer["vertices"]) {
+            Vertex vertex{};
+            vertex.pos = { vert[0].get<float>(), vert[1].get<float>() };
+            vertex.color = {1.0f, 1.0f, 1.0f};
+            player.vertices.push_back(vertex);
+        }
+
+        gameState.player = player; 
 
         for (const auto& obj : data["objects"]) {
             GameObject gObj;
@@ -1265,6 +1285,9 @@ private:
 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
 
+        // Call for player and each object
+        // Vertex offets need to be set on GameObject
+        // Player offset is always 0.
         vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), gameState.instances.size(), 0, 0, 0);
 
         vkCmdEndRenderPass(commandBuffer);

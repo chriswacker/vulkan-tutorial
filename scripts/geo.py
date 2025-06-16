@@ -36,15 +36,21 @@ def test(verts, r):
         i += 1
 
 
-r = 5
-sides = 3
-verts = get_eq_poly_verts(r, sides)
+asteroid_verts = get_eq_poly_verts(1, 3)
+player_verts = get_eq_poly_verts(3, 3)
+
 out = {
+    "player": {
+        "position": [50.0, 50.0],
+        "vertices": player_verts,
+        "rotation": 0, 
+        "velocity": [0, 0],
+    },
     "objects": [
         {
             "id": 0,
-            "name": "small",
-            "vertices": verts,
+            "name": "small asteroids",
+            "vertices": asteroid_verts,
             "indices": [0, 1, 2]
         }
     ],
