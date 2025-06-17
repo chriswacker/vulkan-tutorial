@@ -43,6 +43,7 @@ out = {
     "player": {
         "position": [50.0, 50.0],
         "vertices": player_verts,
+        "indices": [0, 1, 2],
         "rotation": 0, 
         "velocity": [0, 0],
     },

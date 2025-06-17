@@ -103,6 +103,7 @@ struct UniformBufferObject {
 struct GamePlayer {
     glm::vec2 position;
     std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
     float rotation;
     glm::vec2 velocity;
 };
@@ -112,6 +113,8 @@ struct GameObject {
     std::string name;
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
+    int32_t vertexOffset;
+    uint32_t firstIndex;
 };
 
 struct GameInstance {
@@ -372,6 +375,11 @@ private:
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
         std::vector<glm::mat4> modelMatrices{};
+
+        glm::mat4 playerModel = glm::translate(glm::mat4(1.0f), glm::vec3(gameState.player.position, 0.0f));
+
+        modelMatrices.push_back(playerModel);
+
         for (GameInstance& inst : gameState.instances) {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, glm::vec3(inst.position, 0.0f));
@@ -878,8 +886,16 @@ private:
         for (const auto& vert : jPlayer["vertices"]) {
             Vertex vertex{};
             vertex.pos = { vert[0].get<float>(), vert[1].get<float>() };
-            vertex.color = {1.0f, 1.0f, 1.0f};
+            vertex.color = {0.0f, 0.0f, 1.0f};
             player.vertices.push_back(vertex);
+
+            vertices.push_back(vertex);
+        }
+
+        for (const auto& ind : jPlayer["indices"]) {
+            player.indices.push_back(ind);
+
+            indices.push_back(ind);
         }
 
         gameState.player = player; 
@@ -888,6 +904,8 @@ private:
             GameObject gObj;
             gObj.id = obj["id"];
             gObj.name = obj["name"];
+            gObj.vertexOffset = vertices.size();
+            gObj.firstIndex = indices.size();
             for (const auto& vert : obj["vertices"]) {
                 Vertex vertex{};
                 vertex.pos = { vert[0].get<float>(), vert[1].get<float>() };
@@ -1288,7 +1306,14 @@ private:
         // Call for player and each object
         // Vertex offets need to be set on GameObject
         // Player offset is always 0.
-        vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), gameState.instances.size(), 0, 0, 0);
+
+        // Draw player
+        vkCmdDrawIndexed(commandBuffer, gameState.player.indices.size(), 1, 0, 0, 0);
+
+        // Draw objects
+        for (const auto& obj : gameState.objects) {
+            vkCmdDrawIndexed(commandBuffer, obj.indices.size(), gameState.instances.size(), obj.firstIndex, obj.vertexOffset, 1);
+        }
 
         vkCmdEndRenderPass(commandBuffer);
 
