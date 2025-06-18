@@ -1303,17 +1303,13 @@ private:
 
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
 
-        // Call for player and each object
-        // Vertex offets need to be set on GameObject
-        // Player offset is always 0.
-
-        // Draw player
-        vkCmdDrawIndexed(commandBuffer, gameState.player.indices.size(), 1, 0, 0, 0);
-
         // Draw objects
         for (const auto& obj : gameState.objects) {
             vkCmdDrawIndexed(commandBuffer, obj.indices.size(), gameState.instances.size(), obj.firstIndex, obj.vertexOffset, 1);
         }
+
+        // Draw player
+        vkCmdDrawIndexed(commandBuffer, gameState.player.indices.size(), 1, 0, 0, 0);
 
         vkCmdEndRenderPass(commandBuffer);
 
