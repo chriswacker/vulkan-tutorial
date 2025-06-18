@@ -102,10 +102,10 @@ struct UniformBufferObject {
 
 struct GamePlayer {
     glm::vec2 position;
-    std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
     float rotation;
     glm::vec2 velocity;
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
 };
 
 struct GameObject {
@@ -377,6 +377,7 @@ private:
         std::vector<glm::mat4> modelMatrices{};
 
         glm::mat4 playerModel = glm::translate(glm::mat4(1.0f), glm::vec3(gameState.player.position, 0.0f));
+        playerModel = glm::rotate(playerModel, gameState.player.rotation, glm::vec3(0.0f, 0.0f, 1.0f));
 
         modelMatrices.push_back(playerModel);
 
@@ -400,24 +401,23 @@ private:
     }
     
     void updateGameState() {
-        // std::cout << delta << std::endl;
+        float accel = 10.0f;
+        float decel = 0.5f;
 
-        float speed = 10.0;
+        glm::vec2 direction = glm::normalize(glm::vec2 {
+            (inputState.mousePos.x / WIDTH) * 2.0 - 1.0,
+            (inputState.mousePos.y / HEIGHT) * 2.0 - 1.0,
+        });
 
-        if (inputState.keys[GLFW_KEY_A]) {
-            gameState.player.position.x -= speed * delta;
-        } 
-        if (inputState.keys[GLFW_KEY_D]) {
-            gameState.player.position.x += speed * delta;
-        }  
+        gameState.player.rotation = atan2(direction.y, direction.x);
+
         if (inputState.keys[GLFW_KEY_W]) {
-            gameState.player.position.y -= speed * delta;
+            gameState.player.velocity += direction * accel * delta;
+        } else {
+            gameState.player.velocity -= gameState.player.velocity * decel * delta;
         }  
-        if (inputState.keys[GLFW_KEY_S]) {
-            gameState.player.position.y += speed * delta;
-        }
 
-        // std::cout << gameState.playerPos.x << " " << gameState.playerPos.y << std::endl;
+        gameState.player.position += gameState.player.velocity * delta;
     }
 
     void createInstance() {
