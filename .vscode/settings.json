@@ -1,4 +1,16 @@
 {
+    "files.associations": {
+        "algorithm": "cpp",
+        "deque": "cpp",
+        "locale": "cpp",
+        "memory": "cpp",
+        "string": "cpp",
+        "type_traits": "cpp",
+        "unordered_map": "cpp",
+        "__hash_table": "cpp",
+        "valarray": "cpp",
+        "vector": "cpp"
+    }
     // "files.associations": {
     //     "cstdint": "cpp",
     //     "vector": "cpp",

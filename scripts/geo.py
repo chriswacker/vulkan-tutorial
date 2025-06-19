@@ -64,13 +64,12 @@ for i in range(10, 100, 10):
     for j in range(10, 100, 10):
         y = j
         instances.append({
-            "objectId": 0,
             "position": [x, y],
             "rotation": random() * 360,
-            "velocity": [0, 0]
+            "velocity": [random() * 10, random() * 10]
         })
 
-out["instances"] = instances
+out["objects"][0]["instances"] = instances
 
 with open("../models/objects.json", "w") as f:
     json.dump(out, f, indent=2)

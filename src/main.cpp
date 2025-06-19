@@ -104,30 +104,28 @@ struct GamePlayer {
     glm::vec2 position;
     float rotation;
     glm::vec2 velocity;
-    std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
-};
-
-struct GameObject {
-    uint32_t id;
-    std::string name;
-    std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
-    int32_t vertexOffset;
-    uint32_t firstIndex;
+    uint32_t indexCount = 0;
 };
 
 struct GameInstance {
-    uint32_t objectId;
     glm::vec2 position;
     float rotation;
     glm::vec2 velocity;
 };
 
+struct GameObject {
+    uint32_t id;
+    std::string name;
+    uint32_t indexCount = 0;
+    int32_t vertexOffset;
+    uint32_t firstIndex;
+    uint32_t firstInstance;
+    std::vector<GameInstance> instances;
+};
+
 struct GameState {
     GamePlayer player;
     std::vector<GameObject> objects;
-    std::vector<GameInstance> instances;
 };
 
 struct InputState {
@@ -381,11 +379,13 @@ private:
 
         modelMatrices.push_back(playerModel);
 
-        for (GameInstance& inst : gameState.instances) {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, glm::vec3(inst.position, 0.0f));
-            model = glm::rotate(model, glm::radians(time * inst.rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-            modelMatrices.push_back(model);
+        for (GameObject& obj : gameState.objects) {
+            for (GameInstance& inst : obj.instances) {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, glm::vec3(inst.position, 0.0f));
+                model = glm::rotate(model, glm::radians(time * inst.rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+                modelMatrices.push_back(model);
+            }
         }
         
         memcpy(storageBuffersMapped[currentImage], modelMatrices.data(), sizeof(glm::mat4) * modelMatrices.size());
@@ -418,6 +418,10 @@ private:
         }  
 
         gameState.player.position += gameState.player.velocity * delta;
+
+        // for (GameInstance& instance : gameState.instances) {
+        //     instance.position += instance.velocity * delta;
+        // }
     }
 
     void createInstance() {
@@ -887,14 +891,11 @@ private:
             Vertex vertex{};
             vertex.pos = { vert[0].get<float>(), vert[1].get<float>() };
             vertex.color = {0.0f, 0.0f, 1.0f};
-            player.vertices.push_back(vertex);
-
             vertices.push_back(vertex);
         }
 
         for (const auto& ind : jPlayer["indices"]) {
-            player.indices.push_back(ind);
-
+            player.indexCount++;
             indices.push_back(ind);
         }
 
@@ -906,34 +907,42 @@ private:
             gObj.name = obj["name"];
             gObj.vertexOffset = vertices.size();
             gObj.firstIndex = indices.size();
+            gObj.firstInstance = 1 + getTotalInstanceCount();
+
             for (const auto& vert : obj["vertices"]) {
                 Vertex vertex{};
                 vertex.pos = { vert[0].get<float>(), vert[1].get<float>() };
                 vertex.color = {1.0f, 1.0f, 1.0f};
-                gObj.vertices.push_back(vertex);
-
                 vertices.push_back(vertex);
             }
-            for (const auto& ind : obj["indices"]) {
-                gObj.indices.push_back(ind);
 
+            for (const auto& ind : obj["indices"]) {
+                gObj.indexCount++;
                 indices.push_back(ind);
             }
-            gameState.objects.push_back(gObj);
-        }
 
-        for (const auto& inst : data["instances"]) {
-            GameInstance gInst{};
-            gInst.objectId = inst["objectId"];
-            auto pos = inst["position"];
-            auto vel = inst["velocity"];
-            gInst.position = { pos[0].get<float>(), pos[1].get<float>() };
-            gInst.velocity = { vel[0].get<float>(), vel[1].get<float>() };
-            gInst.rotation = inst["rotation"];
-            gameState.instances.push_back(gInst);
+            for (const auto& inst : obj["instances"]) {
+                GameInstance gInst{};
+                auto pos = inst["position"];
+                auto vel = inst["velocity"];
+                gInst.position = { pos[0].get<float>(), pos[1].get<float>() };
+                gInst.velocity = { vel[0].get<float>(), vel[1].get<float>() };
+                gInst.rotation = inst["rotation"];
+                gObj.instances.push_back(gInst);
+            }
+
+            gameState.objects.push_back(gObj);
         }
         
         file.close();
+    }
+
+    size_t getTotalInstanceCount() {
+        size_t count = 0;
+        for (GameObject& obj : gameState.objects) {
+            count += obj.instances.size();
+        }
+        return count;
     }
 
     void createVertexBuffer() {
@@ -1021,7 +1030,7 @@ private:
     }
 
     void createStorageBuffers() {
-        VkDeviceSize bufferSize = sizeof(glm::mat4) * gameState.instances.size();
+        VkDeviceSize bufferSize = sizeof(glm::mat4) * getTotalInstanceCount();
 
         storageBuffers.resize(MAX_FRAMES_IN_FLIGHT);
         storageBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
@@ -1115,7 +1124,7 @@ private:
             VkDescriptorBufferInfo storageBufferInfo{};
             storageBufferInfo.buffer = storageBuffers[i];
             storageBufferInfo.offset = 0;
-            storageBufferInfo.range = sizeof(glm::mat4) * gameState.instances.size();
+            storageBufferInfo.range = sizeof(glm::mat4) * getTotalInstanceCount();
 
             VkWriteDescriptorSet uboDescriptorWrite{};
             uboDescriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -1304,12 +1313,13 @@ private:
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
 
         // Draw objects
+        // TODO: get instance count for each object
         for (const auto& obj : gameState.objects) {
-            vkCmdDrawIndexed(commandBuffer, obj.indices.size(), gameState.instances.size(), obj.firstIndex, obj.vertexOffset, 1);
+            vkCmdDrawIndexed(commandBuffer, obj.indexCount, obj.instances.size(), obj.firstIndex, obj.vertexOffset, obj.firstInstance);
         }
 
         // Draw player
-        vkCmdDrawIndexed(commandBuffer, gameState.player.indices.size(), 1, 0, 0, 0);
+        vkCmdDrawIndexed(commandBuffer, gameState.player.indexCount, 1, 0, 0, 0);
 
         vkCmdEndRenderPass(commandBuffer);
 
