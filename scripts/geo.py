@@ -13,7 +13,14 @@ def get_eq_poly_verts(radius: float, num_sides: int, x_offset: float = 0, y_offs
         y = radius * sin(rads) + y_offset
         verts.append((x, y))
         i += 1
-    return verts
+
+    inds = []
+    j = 1
+    while j <= num_sides - 2:
+        inds.extend([0, j, j + 1])
+        j += 1
+    
+    return verts, inds
 
 
 def distance_between(c1, c2):
@@ -36,14 +43,19 @@ def test(verts, r):
         i += 1
 
 
-asteroid_verts = get_eq_poly_verts(1, 3)
-player_verts = get_eq_poly_verts(3, 3)
+player_radius = 0.5
+small_asteroid_radius = 2
+basic_shot_radius = 0.1
+basic_shot_verts, basic_shot_inds = get_eq_poly_verts(basic_shot_radius, 10)
+player_verts, player_inds = get_eq_poly_verts(player_radius, 10)
+small_asteroid_verts, small_asteroid_inds = get_eq_poly_verts(small_asteroid_radius, 10)
 
 out = {
     "player": {
-        "position": [50.0, 50.0],
+        "position": [55.0, 50.0],
+        "radius": player_radius,
         "vertices": player_verts,
-        "indices": [0, 1, 2],
+        "indices": player_inds,
         "rotation": 0, 
         "velocity": [0, 0],
     },
@@ -51,10 +63,20 @@ out = {
         {
             "id": 0,
             "name": "small asteroids",
-            "vertices": asteroid_verts,
-            "indices": [0, 1, 2]
+            "radius": small_asteroid_radius,
+            "vertices": small_asteroid_verts,
+            "indices": small_asteroid_inds
         }
     ],
+    "projectiles": [
+        {
+            "id": 0,
+            "name": "basic shot",
+            "radius": basic_shot_radius,
+            "vertices": basic_shot_verts,
+            "indices": basic_shot_inds,
+        }
+    ]
 }
 
 instances = []

@@ -22,8 +22,8 @@
 
 const uint32_t WIDTH = 1000;
 const uint32_t HEIGHT = 1000;
-
 const int MAX_FRAMES_IN_FLIGHT = 2;
+const int MAX_PROJECTILES = 100;
 
 const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
@@ -105,12 +105,17 @@ struct GamePlayer {
     float rotation;
     glm::vec2 velocity;
     uint32_t indexCount = 0;
+    float radius;
 };
 
 struct GameInstance {
     glm::vec2 position;
     float rotation;
     glm::vec2 velocity;
+
+    glm::mat4 model;
+    float deleteAt;
+    bool deleteMe;
 };
 
 struct GameObject {
@@ -121,11 +126,13 @@ struct GameObject {
     uint32_t firstIndex;
     uint32_t firstInstance;
     std::vector<GameInstance> instances;
+    float radius;
 };
 
 struct GameState {
     GamePlayer player;
     std::vector<GameObject> objects;
+    std::vector<GameObject> projectiles;
 };
 
 struct InputState {
@@ -139,6 +146,25 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT
         func(instance, debugMessenger, pAllocator);
     }
 }
+
+class Timer {
+    private:
+        std::chrono::high_resolution_clock::time_point startTime;
+
+    public:
+        std::chrono::high_resolution_clock::time_point now() {
+            return std::chrono::high_resolution_clock::now();
+        }
+
+        void start() {
+            startTime = now();
+        }
+
+        float elapsedSeconds() {
+            auto currentTime = now();
+            return std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+        }
+};
 
 class HelloTriangleApplication {
 public:
@@ -223,8 +249,12 @@ private:
     std::vector<VkImageView> swapChainImageViews;
     std::vector<VkFramebuffer> swapChainFramebuffers;
 
-    std::chrono::steady_clock::time_point lastFrameTime;
+    std::chrono::high_resolution_clock::time_point lastFrameTime;
     float delta = 0;
+    Timer gameTimer;
+    Timer deltaTimer;
+    Timer projectileTimer;
+    uint16_t collisionBuffer = 0;
 
     GameState gameState;
     InputState inputState;
@@ -271,10 +301,13 @@ private:
     }
 
     void mainLoop() {
+        gameTimer.start();
+        projectileTimer.start();
         while (!glfwWindowShouldClose(window)) {
+            deltaTimer.start();
             glfwPollEvents();
             drawFrame();
-            updateDelta();
+            delta = deltaTimer.elapsedSeconds();
         }
         
         vkDeviceWaitIdle(device);
@@ -347,11 +380,6 @@ private:
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     }
      
-    void updateDelta() {
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        delta = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastFrameTime).count();
-    }
-
     void updateUniformBuffer(uint32_t currentImage) {
         float viewportWidth = 20.0f;
         float viewportHeight = 20.0f;
@@ -368,9 +396,7 @@ private:
     }
 
     void updateStorageBuffer(uint32_t currentImage) {
-        static auto startTime = std::chrono::high_resolution_clock::now();
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+        float time = gameTimer.elapsedSeconds();
 
         std::vector<glm::mat4> modelMatrices{};
 
@@ -381,10 +407,13 @@ private:
 
         for (GameObject& obj : gameState.objects) {
             for (GameInstance& inst : obj.instances) {
-                glm::mat4 model = glm::mat4(1.0f);
-                model = glm::translate(model, glm::vec3(inst.position, 0.0f));
-                model = glm::rotate(model, glm::radians(time * inst.rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-                modelMatrices.push_back(model);
+                modelMatrices.push_back(inst.model);
+            }
+        }
+
+        for (GameObject& pobj : gameState.projectiles) {
+            for (GameInstance& pinst : pobj.instances) {
+                modelMatrices.push_back(pinst.model);
             }
         }
         
@@ -403,6 +432,7 @@ private:
     void updateGameState() {
         float accel = 10.0f;
         float decel = 0.5f;
+        float gameTime = gameTimer.elapsedSeconds();
 
         glm::vec2 direction = glm::normalize(glm::vec2 {
             (inputState.mousePos.x / WIDTH) * 2.0 - 1.0,
@@ -417,11 +447,72 @@ private:
             gameState.player.velocity -= gameState.player.velocity * decel * delta;
         }  
 
-        gameState.player.position += gameState.player.velocity * delta;
+        if (inputState.keys[GLFW_KEY_F]) {
+            if (projectileTimer.elapsedSeconds() >= 0.2) {
+                GameInstance proj{};
+                proj.position = gameState.player.position;
+                proj.velocity = gameState.player.velocity + direction * 10.0f;
+                proj.rotation = 0;
+                proj.deleteAt = gameTime + 1.0f; // in seconds
 
-        // for (GameInstance& instance : gameState.instances) {
-        //     instance.position += instance.velocity * delta;
-        // }
+                gameState.projectiles[0].instances.push_back(proj);
+                projectileTimer.start();
+            }
+        }
+
+        // update projectile models
+        for (GameObject& pObj : gameState.projectiles) {
+            // Deletion
+            pObj.instances.erase(std::remove_if(pObj.instances.begin(), pObj.instances.end(), [gameTime](GameInstance inst) {
+                return inst.deleteMe || (inst.deleteAt != 0 && inst.deleteAt <= gameTime);
+            }), pObj.instances.end());
+
+            for (GameInstance& proj : pObj.instances) {
+                proj.position += proj.velocity * delta;
+                proj.model = glm::translate(glm::mat4(1.0f), glm::vec3(proj.position, 0.0f));
+            }
+        }
+
+        for (GameObject& obj : gameState.objects) {
+            // Deletion
+            obj.instances.erase(std::remove_if(obj.instances.begin(), obj.instances.end(), [gameTime](GameInstance inst) {
+                return inst.deleteMe || (inst.deleteAt != 0 && inst.deleteAt <= gameTime);
+            }), obj.instances.end());
+
+            for (GameInstance& inst : obj.instances) {
+                // Player collision
+                if (collisionBuffer == 0) {
+                    bool collision = checkCircleCollision(gameState.player.position, inst.position, gameState.player.radius, obj.radius);
+                    if (collision) {
+                        glm::vec2 collisionForce = glm::normalize(gameState.player.position - inst.position) * glm::length(gameState.player.velocity);
+                        gameState.player.velocity = gameState.player.velocity + collisionForce;
+                        collisionBuffer = 100;
+                    } 
+                }
+
+                // Projectile collision
+                for (GameObject& pObj : gameState.projectiles) {
+                    for (GameInstance& proj : pObj.instances) {
+                        bool collision = checkCircleCollision(inst.position, proj.position, obj.radius, pObj.radius);
+                        if (collision) {
+                            // decrement asteroid health
+                            // destroy proj
+                            proj.deleteMe = true;
+                        }
+                    }
+                }
+
+                // Update object model
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, glm::vec3(inst.position, 0.0f));
+                model = glm::rotate(model, glm::radians(gameTime * inst.rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+                inst.model = model;
+            }
+        }
+
+        if (collisionBuffer > 0) collisionBuffer--;
+
+        gameState.player.position += gameState.player.velocity * delta;
     }
 
     void createInstance() {
@@ -886,6 +977,7 @@ private:
         player.position = { jPlayer["position"][0].get<float>(), jPlayer["position"][1].get<float>() };
         player.rotation = jPlayer["rotation"].get<float>();
         player.velocity = { jPlayer["velocity"][0].get<float>(), jPlayer["velocity"][1].get<float>() };
+        player.radius = jPlayer["radius"];
 
         for (const auto& vert : jPlayer["vertices"]) {
             Vertex vertex{};
@@ -908,6 +1000,7 @@ private:
             gObj.vertexOffset = vertices.size();
             gObj.firstIndex = indices.size();
             gObj.firstInstance = 1 + getTotalInstanceCount();
+            gObj.radius = obj["radius"];
 
             for (const auto& vert : obj["vertices"]) {
                 Vertex vertex{};
@@ -933,8 +1026,37 @@ private:
 
             gameState.objects.push_back(gObj);
         }
+
+        for (const auto& proj : data["projectiles"]) {
+            GameObject gproj;
+            gproj.id = proj["id"];
+            gproj.name = proj["name"];
+            gproj.vertexOffset = vertices.size();
+            gproj.firstIndex = indices.size();
+            gproj.firstInstance = 1 + getTotalInstanceCount();
+            gproj.radius = proj["radius"];
+
+            for (const auto& vert : proj["vertices"]) {
+                Vertex vertex{};
+                vertex.pos = { vert[0].get<float>(), vert[1].get<float>() };
+                vertex.color = {1.0f, 1.0f, 1.0f};
+                vertices.push_back(vertex);
+            }
+
+            for (const auto& ind : proj["indices"]) {
+                gproj.indexCount++;
+                indices.push_back(ind);
+            }
+
+            gameState.projectiles.push_back(gproj);
+        }
         
         file.close();
+    }
+
+    bool checkCircleCollision(glm::vec2 centerA, glm::vec2 centerB, float radiusA, float radiusB) {
+        double distance = sqrt(pow(centerB.x - centerA.x, 2) + pow(centerB.y - centerA.y, 2));
+        return radiusA + radiusB >= distance;
     }
 
     size_t getTotalInstanceCount() {
@@ -1030,7 +1152,7 @@ private:
     }
 
     void createStorageBuffers() {
-        VkDeviceSize bufferSize = sizeof(glm::mat4) * getTotalInstanceCount();
+        VkDeviceSize bufferSize = sizeof(glm::mat4) * (getTotalInstanceCount() + MAX_PROJECTILES);
 
         storageBuffers.resize(MAX_FRAMES_IN_FLIGHT);
         storageBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
@@ -1124,7 +1246,7 @@ private:
             VkDescriptorBufferInfo storageBufferInfo{};
             storageBufferInfo.buffer = storageBuffers[i];
             storageBufferInfo.offset = 0;
-            storageBufferInfo.range = sizeof(glm::mat4) * getTotalInstanceCount();
+            storageBufferInfo.range = sizeof(glm::mat4) * (getTotalInstanceCount() + MAX_PROJECTILES);
 
             VkWriteDescriptorSet uboDescriptorWrite{};
             uboDescriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -1313,9 +1435,13 @@ private:
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
 
         // Draw objects
-        // TODO: get instance count for each object
         for (const auto& obj : gameState.objects) {
             vkCmdDrawIndexed(commandBuffer, obj.indexCount, obj.instances.size(), obj.firstIndex, obj.vertexOffset, obj.firstInstance);
+        }
+
+        // Draw projectiles
+        for (const auto& proj : gameState.projectiles) {
+            vkCmdDrawIndexed(commandBuffer, proj.indexCount, proj.instances.size(), proj.firstIndex, proj.vertexOffset, proj.firstInstance);
         }
 
         // Draw player
