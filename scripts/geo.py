@@ -65,7 +65,9 @@ out = {
             "name": "small asteroids",
             "radius": small_asteroid_radius,
             "vertices": small_asteroid_verts,
-            "indices": small_asteroid_inds
+            "indices": small_asteroid_inds,
+            "health": 3,
+            "damage": 1
         }
     ],
     "projectiles": [
@@ -75,6 +77,8 @@ out = {
             "radius": basic_shot_radius,
             "vertices": basic_shot_verts,
             "indices": basic_shot_inds,
+            "health": 1,
+            "damage": 1
         }
     ]
 }

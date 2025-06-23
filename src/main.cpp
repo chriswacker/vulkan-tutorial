@@ -1,8 +1,3 @@
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -17,6 +12,14 @@
 #include <fstream>
 #include <array>
 #include <chrono>
+
+#define MINIAUDIO_IMPLEMENTATION
+#include <miniaudio.h>
+
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <json.hpp>
 
@@ -116,6 +119,8 @@ struct GameInstance {
     glm::mat4 model;
     float deleteAt;
     bool deleteMe;
+    uint16_t health;
+    uint16_t damage;
 };
 
 struct GameObject {
@@ -127,6 +132,8 @@ struct GameObject {
     uint32_t firstInstance;
     std::vector<GameInstance> instances;
     float radius;
+    uint16_t health;
+    uint16_t damage;
 };
 
 struct GameState {
@@ -170,6 +177,8 @@ class HelloTriangleApplication {
 public:
     void run() {
         initWindow();
+        ma_engine_init(NULL, &audioEngine);
+        loadGameState();
         initVulkan();
         mainLoop();
         cleanup();
@@ -256,6 +265,8 @@ private:
     Timer projectileTimer;
     uint16_t collisionBuffer = 0;
 
+    ma_engine audioEngine;
+
     GameState gameState;
     InputState inputState;
 
@@ -277,7 +288,6 @@ private:
     }
 
     void initVulkan() {
-        loadGameState();
         createInstance();
         setupDebugMessenger();
         createSurface();
@@ -457,27 +467,23 @@ private:
 
                 gameState.projectiles[0].instances.push_back(proj);
                 projectileTimer.start();
+                ma_engine_play_sound(&audioEngine, "sounds/E-Mu-Proteus-2-Electric-Guitar-C4.wav", NULL);
             }
         }
 
-        // update projectile models
-        for (GameObject& pObj : gameState.projectiles) {
-            // Deletion
-            pObj.instances.erase(std::remove_if(pObj.instances.begin(), pObj.instances.end(), [gameTime](GameInstance inst) {
-                return inst.deleteMe || (inst.deleteAt != 0 && inst.deleteAt <= gameTime);
-            }), pObj.instances.end());
-
-            for (GameInstance& proj : pObj.instances) {
-                proj.position += proj.velocity * delta;
-                proj.model = glm::translate(glm::mat4(1.0f), glm::vec3(proj.position, 0.0f));
-            }
-        }
+        uint32_t instanceCount = 0;
 
         for (GameObject& obj : gameState.objects) {
+            // update first instance for draw to index correct model in SSBO
+            obj.firstInstance = 1 + instanceCount;
+
             // Deletion
             obj.instances.erase(std::remove_if(obj.instances.begin(), obj.instances.end(), [gameTime](GameInstance inst) {
                 return inst.deleteMe || (inst.deleteAt != 0 && inst.deleteAt <= gameTime);
             }), obj.instances.end());
+
+            // keep track of instance count after any deletions
+            instanceCount += obj.instances.size();
 
             for (GameInstance& inst : obj.instances) {
                 // Player collision
@@ -496,6 +502,8 @@ private:
                         bool collision = checkCircleCollision(inst.position, proj.position, obj.radius, pObj.radius);
                         if (collision) {
                             // decrement asteroid health
+                            inst.health -= pObj.damage;
+                            if (inst.health == 0) inst.deleteMe = true;
                             // destroy proj
                             proj.deleteMe = true;
                         }
@@ -507,6 +515,24 @@ private:
                 model = glm::translate(model, glm::vec3(inst.position, 0.0f));
                 model = glm::rotate(model, glm::radians(gameTime * inst.rotation), glm::vec3(0.0f, 0.0f, 1.0f));
                 inst.model = model;
+            }
+        }
+
+        // update projectile models
+        for (GameObject& pObj : gameState.projectiles) {
+            pObj.firstInstance = 1 + instanceCount;
+
+            // Deletion
+            pObj.instances.erase(std::remove_if(pObj.instances.begin(), pObj.instances.end(), [gameTime](GameInstance inst) {
+                return inst.deleteMe || (inst.deleteAt != 0 && inst.deleteAt <= gameTime);
+            }), pObj.instances.end());
+
+            instanceCount += pObj.instances.size();
+
+            for (GameInstance& proj : pObj.instances) {
+                proj.position += proj.velocity * delta;
+                proj.model = glm::translate(glm::mat4(1.0f), glm::vec3(proj.position, 0.0f));
+                std::cout << proj.position.x << ", " << proj.position.y << std::endl;
             }
         }
 
@@ -1001,6 +1027,8 @@ private:
             gObj.firstIndex = indices.size();
             gObj.firstInstance = 1 + getTotalInstanceCount();
             gObj.radius = obj["radius"];
+            gObj.health = obj["health"];
+            gObj.damage = obj["damage"];
 
             for (const auto& vert : obj["vertices"]) {
                 Vertex vertex{};
@@ -1021,6 +1049,8 @@ private:
                 gInst.position = { pos[0].get<float>(), pos[1].get<float>() };
                 gInst.velocity = { vel[0].get<float>(), vel[1].get<float>() };
                 gInst.rotation = inst["rotation"];
+                gInst.health = gObj.health;
+                gInst.damage = gObj.damage;
                 gObj.instances.push_back(gInst);
             }
 
@@ -1035,6 +1065,8 @@ private:
             gproj.firstIndex = indices.size();
             gproj.firstInstance = 1 + getTotalInstanceCount();
             gproj.radius = proj["radius"];
+            gproj.health = proj["health"];
+            gproj.damage = proj["damage"];
 
             for (const auto& vert : proj["vertices"]) {
                 Vertex vertex{};
