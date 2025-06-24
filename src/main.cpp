@@ -23,8 +23,8 @@
 
 #include <json.hpp>
 
-const uint32_t WIDTH = 1000;
-const uint32_t HEIGHT = 1000;
+const uint32_t WIDTH = 800;
+const uint32_t HEIGHT = 800;
 const int MAX_FRAMES_IN_FLIGHT = 2;
 const int MAX_PROJECTILES = 100;
 
@@ -467,7 +467,7 @@ private:
 
                 gameState.projectiles[0].instances.push_back(proj);
                 projectileTimer.start();
-                ma_engine_play_sound(&audioEngine, "sounds/E-Mu-Proteus-2-Electric-Guitar-C4.wav", NULL);
+                ma_engine_play_sound(&audioEngine, "sounds/Shoot.wav", NULL);
             }
         }
 
@@ -532,7 +532,6 @@ private:
             for (GameInstance& proj : pObj.instances) {
                 proj.position += proj.velocity * delta;
                 proj.model = glm::translate(glm::mat4(1.0f), glm::vec3(proj.position, 0.0f));
-                std::cout << proj.position.x << ", " << proj.position.y << std::endl;
             }
         }
 
