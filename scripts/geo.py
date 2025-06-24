@@ -80,7 +80,7 @@ out = {
             "health": 1,
             "damage": 1
         }
-    ]
+    ],
 }
 
 instances = []

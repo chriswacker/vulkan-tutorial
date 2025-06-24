@@ -467,7 +467,7 @@ private:
 
                 gameState.projectiles[0].instances.push_back(proj);
                 projectileTimer.start();
-                ma_engine_play_sound(&audioEngine, "sounds/Shoot.wav", NULL);
+                ma_engine_play_sound(&audioEngine, "sounds/small-shoot.wav", NULL);
             }
         }
 
