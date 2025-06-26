@@ -81,6 +81,13 @@ out = {
             "damage": 1
         }
     ],
+    "hud": [
+        {
+            # TODO
+            "vertices": basic_shot_verts,
+            "indices": basic_shot_inds,
+        }
+    ]
 }
 
 instances = []

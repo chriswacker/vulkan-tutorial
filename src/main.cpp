@@ -26,6 +26,8 @@
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 800;
 const int MAX_FRAMES_IN_FLIGHT = 2;
+const int DYNAMIC_UBO_COUNT = 2;
+
 const int MAX_PROJECTILES = 100;
 
 const std::vector<const char*> validationLayers = {
@@ -237,6 +239,7 @@ private:
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
     VkDescriptorPool descriptorPool;
+    VkDeviceSize dynamicUBOAlignment;
 
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -258,7 +261,6 @@ private:
     std::vector<VkImageView> swapChainImageViews;
     std::vector<VkFramebuffer> swapChainFramebuffers;
 
-    std::chrono::high_resolution_clock::time_point lastFrameTime;
     float delta = 0;
     Timer gameTimer;
     Timer deltaTimer;
@@ -324,7 +326,6 @@ private:
     }
 
     void drawFrame() {
-        lastFrameTime = std::chrono::high_resolution_clock::now();
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex;
@@ -403,6 +404,16 @@ private:
         ubo.proj = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 
         memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
+
+        float hudWidth = 100.0f;
+        float hudHeight = 100.0f;
+        UniformBufferObject hudUbo{};
+        hudUbo.proj = glm::ortho(0.0f, 100.0f, 0.0f, 100.0f, -1.0f, 1.0f);
+
+        // cast to char* because we can't do arithmetic on void*, and char* operates in bytes, which is what we want
+        // we don't actually have to do this every frame
+        void* hudUboDest = static_cast<char*>(uniformBuffersMapped[currentImage]) + dynamicUBOAlignment;
+        memcpy(hudUboDest, &hudUbo, sizeof(hudUbo));
     }
 
     void updateStorageBuffer(uint32_t currentImage) {
@@ -1163,7 +1174,18 @@ private:
     }
 
     void createUniformBuffers() {
-        VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+        VkPhysicalDeviceProperties deviceProperties;
+        vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
+
+        VkDeviceSize minAlignment = deviceProperties.limits.minUniformBufferOffsetAlignment;
+
+        if (sizeof(UniformBufferObject) % minAlignment == 0) {
+            dynamicUBOAlignment = sizeof(UniformBufferObject);
+        } else {
+            dynamicUBOAlignment = (sizeof(UniformBufferObject) / minAlignment + 1) * minAlignment;
+        }
+
+        VkDeviceSize bufferSize = dynamicUBOAlignment * DYNAMIC_UBO_COUNT;
 
         uniformBuffers.resize(MAX_FRAMES_IN_FLIGHT);
         uniformBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
@@ -1205,7 +1227,7 @@ private:
     void createDescriptorSetLayout() {
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
         uboLayoutBinding.binding = 0;
-        uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
         uboLayoutBinding.descriptorCount = 1;
         uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
         uboLayoutBinding.pImmutableSamplers = nullptr;
@@ -1234,7 +1256,7 @@ private:
 
     void createDescriptorPool() {
         VkDescriptorPoolSize uboPoolSize{};
-        uboPoolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        uboPoolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
         uboPoolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 
         VkDescriptorPoolSize storagePoolSize{};
@@ -1272,7 +1294,7 @@ private:
             VkDescriptorBufferInfo uboBufferInfo{};
             uboBufferInfo.buffer = uniformBuffers[i];
             uboBufferInfo.offset = 0;
-            uboBufferInfo.range = sizeof(UniformBufferObject);
+            uboBufferInfo.range = sizeof(UniformBufferObject); // not the size of the buffer, but the part exposed to the shader
 
             VkDescriptorBufferInfo storageBufferInfo{};
             storageBufferInfo.buffer = storageBuffers[i];
@@ -1284,7 +1306,7 @@ private:
             uboDescriptorWrite.dstSet = descriptorSets[i];
             uboDescriptorWrite.dstBinding = 0;
             uboDescriptorWrite.dstArrayElement = 0;
-            uboDescriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            uboDescriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
             uboDescriptorWrite.descriptorCount = 1;
             uboDescriptorWrite.pBufferInfo = &uboBufferInfo;
             uboDescriptorWrite.pImageInfo = nullptr;
@@ -1463,7 +1485,9 @@ private:
 
         vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
-        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
+        uint32_t dynamicOffset = 0;
+
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 1, &dynamicOffset);
 
         // Draw objects
         for (const auto& obj : gameState.objects) {
@@ -1477,6 +1501,14 @@ private:
 
         // Draw player
         vkCmdDrawIndexed(commandBuffer, gameState.player.indexCount, 1, 0, 0, 0);
+
+        // Draw HUD
+        dynamicOffset += dynamicUBOAlignment;
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 1, &dynamicOffset);
+
+        // Need vector of hud objects with indexCounts, firstIndexes in index buffer, and vertexOffets. Maybe no instances
+        // draw some circles?
+        // vkCmdDrawIndexed(commandBuffer, obj.indexCount, obj.instances.size(), obj.firstIndex, obj.vertexOffset, obj.firstInstance);
 
         vkCmdEndRenderPass(commandBuffer);
 
