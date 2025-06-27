@@ -49,6 +49,7 @@ basic_shot_radius = 0.1
 basic_shot_verts, basic_shot_inds = get_eq_poly_verts(basic_shot_radius, 10)
 player_verts, player_inds = get_eq_poly_verts(player_radius, 10)
 small_asteroid_verts, small_asteroid_inds = get_eq_poly_verts(small_asteroid_radius, 10)
+hub_obj_verts, hub_obj_inds = get_eq_poly_verts(5, 4)
 
 out = {
     "player": {
@@ -83,9 +84,8 @@ out = {
     ],
     "hud": [
         {
-            # TODO
-            "vertices": basic_shot_verts,
-            "indices": basic_shot_inds,
+            "vertices": hub_obj_verts,
+            "indices": hub_obj_inds,
         }
     ]
 }
@@ -103,6 +103,9 @@ for i in range(10, 100, 10):
         })
 
 out["objects"][0]["instances"] = instances
+out["hud"][0]["instances"] = [{
+    "position": [10, 10]
+}]
 
 with open("../models/objects.json", "w") as f:
     json.dump(out, f, indent=2)

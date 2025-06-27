@@ -25,8 +25,9 @@
 
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 800;
-const int MAX_FRAMES_IN_FLIGHT = 2;
+const int MAX_FRAMES_IN_FLIGHT = 1;
 const int DYNAMIC_UBO_COUNT = 2;
+const int DYNAMIC_SSBO_COUNT = 3;
 
 const int MAX_PROJECTILES = 100;
 
@@ -142,6 +143,7 @@ struct GameState {
     GamePlayer player;
     std::vector<GameObject> objects;
     std::vector<GameObject> projectiles;
+    std::vector<GameObject> hudObjects;
 };
 
 struct InputState {
@@ -240,6 +242,7 @@ private:
     VkDeviceMemory indexBufferMemory;
     VkDescriptorPool descriptorPool;
     VkDeviceSize dynamicUBOAlignment;
+    VkDeviceSize dynamicSSBOAlignment;
 
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -341,13 +344,13 @@ private:
         // Only reset the fence if we are submitting work
         vkResetFences(device, 1, &inFlightFences[currentFrame]);
 
-        vkResetCommandBuffer(commandBuffers[currentFrame], 0);
-        recordCommandBuffer(commandBuffers[currentFrame], imageIndex);
-
         updateInputState();
         updateGameState();
         updateUniformBuffer(currentFrame);
         updateStorageBuffer(currentFrame);
+
+        vkResetCommandBuffer(commandBuffers[currentFrame], 0);
+        recordCommandBuffer(commandBuffers[currentFrame], imageIndex);
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -368,12 +371,12 @@ private:
             throw std::runtime_error("failed to submit draw command buffer!");
         }
 
+        VkSwapchainKHR swapChains[] = {swapChain};
+
         VkPresentInfoKHR presentInfo{};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
         presentInfo.waitSemaphoreCount = 1;
         presentInfo.pWaitSemaphores = signalSemaphores;
-
-        VkSwapchainKHR swapChains[] = {swapChain};
         presentInfo.swapchainCount = 1;
         presentInfo.pSwapchains = swapChains;
         presentInfo.pImageIndices = &imageIndex;
@@ -395,10 +398,10 @@ private:
         float viewportWidth = 20.0f;
         float viewportHeight = 20.0f;
 
-        float left = gameState.player.position.x - viewportWidth / 2.0f;
-        float right = gameState.player.position.x + viewportWidth / 2.0f;
-        float bottom = gameState.player.position.y - viewportHeight / 2.0f;
-        float top = gameState.player.position.y + viewportHeight / 2.0f;
+        float left = gameState.player.position.x - viewportWidth / 2.0f; // 45
+        float right = gameState.player.position.x + viewportWidth / 2.0f; // 65
+        float bottom = gameState.player.position.y - viewportHeight / 2.0f; // 40
+        float top = gameState.player.position.y + viewportHeight / 2.0f; // 50
 
         UniformBufferObject ubo{};
         ubo.proj = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
@@ -429,6 +432,12 @@ private:
         for (GameObject& obj : gameState.objects) {
             for (GameInstance& inst : obj.instances) {
                 modelMatrices.push_back(inst.model);
+            }
+        }
+
+        for (GameObject& hudObj : gameState.hudObjects) {
+            for (GameInstance& hudInst : hudObj.instances) {
+                modelMatrices.push_back(hudInst.model);
             }
         }
 
@@ -527,6 +536,11 @@ private:
                 model = glm::rotate(model, glm::radians(gameTime * inst.rotation), glm::vec3(0.0f, 0.0f, 1.0f));
                 inst.model = model;
             }
+        }
+
+        for (GameObject& hudObj : gameState.hudObjects) {
+            hudObj.firstInstance = 1 + instanceCount;
+            instanceCount += hudObj.instances.size();
         }
 
         // update projectile models
@@ -1092,6 +1106,35 @@ private:
 
             gameState.projectiles.push_back(gproj);
         }
+
+        for (const auto& hud : data["hud"]) {
+            GameObject hudObj;
+            hudObj.vertexOffset = vertices.size();
+            hudObj.firstIndex = indices.size();
+            hudObj.firstInstance = 1 + getTotalInstanceCount();
+
+            for (const auto& vert : hud["vertices"]) {
+                Vertex vertex{};
+                vertex.pos = { vert[0].get<float>(), vert[1].get<float>() };
+                vertex.color = {0.0f, 1.0f, 0.0f};
+                vertices.push_back(vertex);
+            }
+
+            for (const auto& ind : hud["indices"]) {
+                hudObj.indexCount++;
+                indices.push_back(ind);
+            }
+
+            for (const auto& inst : hud["instances"]) {
+                GameInstance hudInst{};
+                auto pos = inst["position"];
+                hudInst.position = { pos[0].get<float>(), pos[1].get<float>() };
+                hudInst.model = glm::translate(glm::mat4(1.0), glm::vec3(hudInst.position, 0.0));
+                hudObj.instances.push_back(hudInst);
+            }
+
+            gameState.hudObjects.push_back(hudObj);
+        }
         
         file.close();
     }
@@ -1205,6 +1248,18 @@ private:
     }
 
     void createStorageBuffers() {
+        // VkPhysicalDeviceProperties deviceProperties;
+        // vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
+
+        // VkDeviceSize minAlignment = deviceProperties.limits.minStorageBufferOffsetAlignment;
+        // VkDeviceSize ssboRange = sizeof(glm::mat4) * (getTotalInstanceCount() + MAX_PROJECTILES);
+
+        // if (sizeof(ssboRange % minAlignment == 0) {
+        //     dynamicSSBOAlignment = ssboRange;
+        // } else {
+        //     dynamicSSBOAlignment = (ssboRange / minAlignment + 1) * minAlignment;
+        // }
+
         VkDeviceSize bufferSize = sizeof(glm::mat4) * (getTotalInstanceCount() + MAX_PROJECTILES);
 
         storageBuffers.resize(MAX_FRAMES_IN_FLIGHT);
@@ -1506,9 +1561,9 @@ private:
         dynamicOffset += dynamicUBOAlignment;
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 1, &dynamicOffset);
 
-        // Need vector of hud objects with indexCounts, firstIndexes in index buffer, and vertexOffets. Maybe no instances
-        // draw some circles?
-        // vkCmdDrawIndexed(commandBuffer, obj.indexCount, obj.instances.size(), obj.firstIndex, obj.vertexOffset, obj.firstInstance);
+        for (const auto& hudObj : gameState.hudObjects) {
+            vkCmdDrawIndexed(commandBuffer, hudObj.indexCount, hudObj.instances.size(), hudObj.firstIndex, hudObj.vertexOffset, hudObj.firstInstance);
+        }
 
         vkCmdEndRenderPass(commandBuffer);
 
@@ -1558,12 +1613,12 @@ private:
     }
 
     VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) {
-        return VK_PRESENT_MODE_IMMEDIATE_KHR;
-        for (const VkPresentModeKHR& availablePresentMode : availablePresentModes) {
-            if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
-                return availablePresentMode;
-            }
-        }
+        // return VK_PRESENT_MODE_IMMEDIATE_KHR;
+        // for (const VkPresentModeKHR& availablePresentMode : availablePresentModes) {
+        //     if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
+        //         return availablePresentMode;
+        //     }
+        // }
         return VK_PRESENT_MODE_FIFO_KHR;
     }
 
