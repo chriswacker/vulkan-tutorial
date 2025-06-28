@@ -49,7 +49,11 @@ basic_shot_radius = 0.1
 basic_shot_verts, basic_shot_inds = get_eq_poly_verts(basic_shot_radius, 10)
 player_verts, player_inds = get_eq_poly_verts(player_radius, 10)
 small_asteroid_verts, small_asteroid_inds = get_eq_poly_verts(small_asteroid_radius, 10)
-hub_obj_verts, hub_obj_inds = get_eq_poly_verts(5, 4)
+hud_obj_verts, hud_obj_inds = get_eq_poly_verts(5, 4)
+font_verts = []
+for i in range(11):
+    for j in range(11):
+        font_verts.append((j, i))
 
 out = {
     "player": {
@@ -82,12 +86,34 @@ out = {
             "damage": 1
         }
     ],
-    "hud": [
-        {
-            "vertices": hub_obj_verts,
-            "indices": hub_obj_inds,
-        }
-    ]
+    "font": {
+        "vertices": font_verts,
+        "characters": [
+            {
+                "char": "A",
+                "indices": []
+            },
+            {
+                "char": "B",
+                "indices": []
+            }
+        ]
+    },
+    "hud": { 
+        "objects": [
+            {
+                "vertices": hud_obj_verts,
+                "indices": hud_obj_inds
+            }
+        ],
+        "text": [
+            {
+                "text": "AB",
+                "position": [10, 10],
+                "scale": [0.5, 0.5]
+            }
+        ]
+    }
 }
 
 instances = []
@@ -103,7 +129,7 @@ for i in range(10, 100, 10):
         })
 
 out["objects"][0]["instances"] = instances
-out["hud"][0]["instances"] = [{
+out["hud"]["objects"][0]["instances"] = [{
     "position": [10, 10]
 }]
 

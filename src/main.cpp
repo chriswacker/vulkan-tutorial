@@ -141,6 +141,8 @@ struct GameObject {
 
 struct GameState {
     GamePlayer player;
+    int32_t fontVertexOffset;
+    std::unordered_map<char, GameObject> fontCharacters;
     std::vector<GameObject> objects;
     std::vector<GameObject> projectiles;
     std::vector<GameObject> hudObjects;
@@ -1107,7 +1109,23 @@ private:
             gameState.projectiles.push_back(gproj);
         }
 
-        for (const auto& hud : data["hud"]) {
+        // Load font vertices
+        gameState.fontVertexOffset = vertices.size();
+
+        for (const auto& vert : data["font"]["vertices"]) {
+            Vertex vertex{};
+            vertex.pos = { vert[0].get<float>(), vert[1].get<float>() };
+            vertex.color = {0.0f, 1.0f, 0.0f};
+            vertices.push_back(vertex);
+        }
+
+        for (const auto& character : data["font"]["characters"]) {
+            char c = character["char"].get<char>();
+            for (const auto& ind : character["indices"]) {
+            }
+        }
+
+        for (const auto& hud : data["hud"]["objects"]) {
             GameObject hudObj;
             hudObj.vertexOffset = vertices.size();
             hudObj.firstIndex = indices.size();
@@ -1125,11 +1143,15 @@ private:
                 indices.push_back(ind);
             }
 
+            std::cout << hudObj.indexCount << std::endl;
+
             for (const auto& inst : hud["instances"]) {
                 GameInstance hudInst{};
                 auto pos = inst["position"];
                 hudInst.position = { pos[0].get<float>(), pos[1].get<float>() };
-                hudInst.model = glm::translate(glm::mat4(1.0), glm::vec3(hudInst.position, 0.0));
+                glm::mat4 model = glm::translate(glm::mat4(1.0), glm::vec3(hudInst.position, 0.0));
+                model = glm::scale(model, glm::vec3(0.5f));
+                hudInst.model = model;
                 hudObj.instances.push_back(hudInst);
             }
 
