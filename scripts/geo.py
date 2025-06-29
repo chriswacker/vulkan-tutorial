@@ -109,7 +109,7 @@ out = {
         "text": [
             {
                 "text": "AB",
-                "position": [10, 10],
+                "position": [20, 20],
                 "scale": [0.5, 0.5]
             }
         ]

@@ -139,6 +139,12 @@ struct GameObject {
     uint16_t damage;
 };
 
+struct GameText {
+    std::string text;
+    glm::vec2 position;
+    glm::vec2 scale;
+};
+
 struct GameState {
     GamePlayer player;
     int32_t fontVertexOffset;
@@ -146,6 +152,7 @@ struct GameState {
     std::vector<GameObject> objects;
     std::vector<GameObject> projectiles;
     std::vector<GameObject> hudObjects;
+    std::vector<GameText> hudText;
 };
 
 struct InputState {
@@ -442,6 +449,8 @@ private:
                 modelMatrices.push_back(hudInst.model);
             }
         }
+
+        // for (GameObject& hudText : gameState.)
 
         for (GameObject& pobj : gameState.projectiles) {
             for (GameInstance& pinst : pobj.instances) {
@@ -1120,11 +1129,47 @@ private:
         }
 
         for (const auto& character : data["font"]["characters"]) {
-            char c = character["char"].get<char>();
+            GameObject fontChar{};
+            fontChar.firstIndex = indices.size();
+            std::string c = character["char"];
+
             for (const auto& ind : character["indices"]) {
+                fontChar.indexCount++;
+                indices.push_back(ind);
+            }
+            
+            gameState.fontCharacters[c[0]] = fontChar;
+        }
+
+        for (const auto& hudTxt : data["hud"]["text"]) {
+            std::string text = hudTxt["text"];
+            std::unordered_map<char, GameObject> charObjs;
+            glm::vec2 wordPos = { hudTxt["position"][0].get<float>(), hudTxt["position"][1].get<float>() };
+            glm::vec2 scale = { hudTxt["scale"][0].get<float>(), hudTxt["scale"][1].get<float>() };
+            int charCount = 0;
+            for (char c : text) {
+                if (charObjs.find(c) == charObjs.end()) {
+                    GameObject charObj{};
+                    charObj.vertexOffset = gameState.fontVertexOffset;
+                    charObj.firstIndex = gameState.fontCharacters[c].firstIndex;
+                    charObj.indexCount = gameState.fontCharacters[c].indexCount;
+                    charObj.firstInstance = 1 + getTotalInstanceCount();
+                    charObjs[c] = charObj;
+                }
+
+                GameInstance charInst{};
+                charInst.position = wordPos + glm::vec2(10 * scale.x * charCount, 0.0f);
+                glm::mat4 model = glm::translate(glm::mat4(1.0), glm::vec3(charInst.position, 0.0));
+                charInst.model = model;
+                charObjs[c].instances.push_back(charInst);
+            }
+
+            for (auto& kv : charObjs) {
+                gameState.hudObjects.push_back(kv.second);
             }
         }
 
+        // TODO : Account for hud objects in getTotalInstanceCount()
         for (const auto& hud : data["hud"]["objects"]) {
             GameObject hudObj;
             hudObj.vertexOffset = vertices.size();
@@ -1169,6 +1214,9 @@ private:
     size_t getTotalInstanceCount() {
         size_t count = 0;
         for (GameObject& obj : gameState.objects) {
+            count += obj.instances.size();
+        }
+        for (GameObject& obj : gameState.hudObjects) {
             count += obj.instances.size();
         }
         return count;
@@ -1270,18 +1318,6 @@ private:
     }
 
     void createStorageBuffers() {
-        // VkPhysicalDeviceProperties deviceProperties;
-        // vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
-
-        // VkDeviceSize minAlignment = deviceProperties.limits.minStorageBufferOffsetAlignment;
-        // VkDeviceSize ssboRange = sizeof(glm::mat4) * (getTotalInstanceCount() + MAX_PROJECTILES);
-
-        // if (sizeof(ssboRange % minAlignment == 0) {
-        //     dynamicSSBOAlignment = ssboRange;
-        // } else {
-        //     dynamicSSBOAlignment = (ssboRange / minAlignment + 1) * minAlignment;
-        // }
-
         VkDeviceSize bufferSize = sizeof(glm::mat4) * (getTotalInstanceCount() + MAX_PROJECTILES);
 
         storageBuffers.resize(MAX_FRAMES_IN_FLIGHT);
