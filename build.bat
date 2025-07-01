@@ -5,6 +5,10 @@ echo "Building shaders..."
 %VULKAN_SDK%/Bin/glslc.exe shaders/shader.frag -o shaders/shader.frag.spv
 %VULKAN_SDK%/Bin/glslc.exe shaders/shader.vert -o shaders/shader.vert.spv
 
+echo "Building geometries..."
+
+python scripts/geo.py
+
 call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
 
 SET includes=/Isrc /I%VULKAN_SDK%/Include /IC:/Users/chris/Source/glfw-3.4.bin.WIN64/include /IC:/Users/chris/Source/glm-1.0.1-light /IC:/Users/chris/Source/lib

@@ -1158,10 +1158,12 @@ private:
                 }
 
                 GameInstance charInst{};
-                charInst.position = wordPos + glm::vec2(10 * scale.x * charCount, 0.0f);
+                charInst.position = wordPos + glm::vec2(11 * scale.x * charCount, 0.0f);
                 glm::mat4 model = glm::translate(glm::mat4(1.0), glm::vec3(charInst.position, 0.0));
+                model = glm::scale(model, glm::vec3(scale, 0.0f));
                 charInst.model = model;
                 charObjs[c].instances.push_back(charInst);
+                charCount++;
             }
 
             for (auto& kv : charObjs) {
@@ -1187,8 +1189,6 @@ private:
                 hudObj.indexCount++;
                 indices.push_back(ind);
             }
-
-            std::cout << hudObj.indexCount << std::endl;
 
             for (const auto& inst : hud["instances"]) {
                 GameInstance hudInst{};
