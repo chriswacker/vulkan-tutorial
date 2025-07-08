@@ -192,6 +192,7 @@ public:
         initWindow();
         ma_engine_init(NULL, &audioEngine);
         loadGameState();
+        // updateRenderState(); // converts gameState to renderState
         initVulkan();
         mainLoop();
         cleanup();
