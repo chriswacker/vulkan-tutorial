@@ -1172,7 +1172,6 @@ private:
             }
         }
 
-        // TODO : Account for hud objects in getTotalInstanceCount()
         for (const auto& hud : data["hud"]["objects"]) {
             GameObject hudObj;
             hudObj.vertexOffset = vertices.size();

@@ -616,13 +616,8 @@ out = {
         ],
         "text": [
             {
-                "text": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                "text": "HELLO, WORLD!",
                 "position": [10, 20],
-                "scale": [0.3, 0.3]
-            },
-            {
-                "text": "1234567890.,!",
-                "position": [10, 31],
                 "scale": [0.3, 0.3]
             },
         ]

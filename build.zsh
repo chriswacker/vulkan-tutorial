@@ -2,6 +2,8 @@ source /Users/chris/VulkanSDK/1.4.309.0/setup-env.sh
 glslc shaders/shader.frag -o shaders/shader.frag.spv
 glslc shaders/shader.vert -o shaders/shader.vert.spv
 
+python /Users/chris/source/repos/vulkan-tutorial/scripts/geo.py
+
 clang++ -g -std=c++17 -stdlib=libc++ -target arm64-apple-macos \
     -I$VULKAN_SDK/include \
     -I/opt/homebrew/include \
