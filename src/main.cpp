@@ -27,7 +27,7 @@ const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 800;
 const int MAX_FRAMES_IN_FLIGHT = 1;
 const int DYNAMIC_UBO_COUNT = 2;
-const int DYNAMIC_SSBO_COUNT = 3;
+const int DYNAMIC_SSBO_COUNT = 2;
 
 const int MAX_PROJECTILES = 100;
 
