@@ -2,6 +2,8 @@ import json
 from random import random
 from math import sqrt, sin, cos, radians, isclose
 
+from dataclasses import dataclass
+
 
 def get_eq_poly_verts(radius: float, num_sides: int, x_offset: float = 0, y_offset: float = 0):
     angle = 360.0 / num_sides
@@ -30,24 +32,86 @@ def distance_between(c1, c2):
     y2=c2[1]
     return sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
-def test(verts, r):
-    i = 0
-    while i < len(verts):
-        a = verts[i]
-        b = verts[i-1]
-        print(
-            isclose(a[0]**2 + a[1]**2, r), 
-            isclose(b[0]**2 + b[1]**2, r), 
-            round(distance_between(a, b), 5)
-        )
-        i += 1
+
+def vertex(pos: tuple, color: tuple, normal: tuple):
+    return {
+        "pos": pos,
+        "color": color,
+        "normal": normal
+    }
+
+
+def get_player_verts():
+    verts = [
+        vertex(pos=(0, -15), color=(0.5, 0.5, 0.5), normal=(-1, -1, -1)),
+        vertex(pos=(0, -9), color=(0.5, 0.5, 0.5), normal=(-1, -1, -1)),
+        vertex(pos=(-3, -9), color=(0.5, 0.5, 0.5), normal=(-1, -1, -1)),
+        
+        vertex(pos=(0, -15), color=(0.5, 0.5, 0.5), normal=(1, -1, -1)),
+        vertex(pos=(3, -9), color=(0.5, 0.5, 0.5), normal=(1, -1, -1)),
+        vertex(pos=(0, -9), color=(0.5, 0.5, 0.5), normal=(1, -1, -1)),
+
+
+        vertex(pos=(0, -9), color=(0.5, 0.5, 0.5), normal=(-2, -1, -1)),
+        vertex(pos=(-2, 0), color=(0.5, 0.5, 0.5), normal=(-2, -1, -1)),
+        vertex(pos=(-3, -9), color=(0.5, 0.5, 0.5), normal=(-2, -1, -1)),
+
+        vertex(pos=(0, -9), color=(0.5, 0.5, 0.5), normal=(-2, -1, -2)),
+        vertex(pos=(0, 0), color=(0.5, 0.5, 0.5), normal=(-2, -1, -2)),
+        vertex(pos=(-2, 0), color=(0.5, 0.5, 0.5), normal=(-2, -1, -2)),
+
+        vertex(pos=(0, -9), color=(0.5, 0.5, 0.5), normal=(2, -1, -1)),
+        vertex(pos=(3, -9), color=(0.5, 0.5, 0.5), normal=(2, -1, -1)),
+        vertex(pos=(2, 0), color=(0.5, 0.5, 0.5), normal=(2, -1, -1)),
+
+        vertex(pos=(0, -9), color=(0.5, 0.5, 0.5), normal=(2, -1, -2)),
+        vertex(pos=(2, 0), color=(0.5, 0.5, 0.5), normal=(2, -1, -2)),
+        vertex(pos=(0, 0), color=(0.5, 0.5, 0.5), normal=(2, -1, -2)),
+
+
+        vertex(pos=(0, 0), color=(0.5, 0.5, 0.5), normal=(-1, 1, -2)),
+        vertex(pos=(0, 3), color=(0.5, 0.5, 0.5), normal=(-1, 1, -2)),
+        vertex(pos=(-2, 0), color=(0.5, 0.5, 0.5), normal=(-1, 1, -2)),
+
+        vertex(pos=(-2, 0), color=(0.5, 0.5, 0.5), normal=(-1, 1, -1)),
+        vertex(pos=(0, 3), color=(0.5, 0.5, 0.5), normal=(-1, 1, -1)),
+        vertex(pos=(-2, 3), color=(0.5, 0.5, 0.5), normal=(-1, 1, -1)),
+
+        vertex(pos=(0, 0), color=(0.5, 0.5, 0.5), normal=(1, 1, -2)),
+        vertex(pos=(2, 0), color=(0.5, 0.5, 0.5), normal=(1, 1, -2)),
+        vertex(pos=(0, 3), color=(0.5, 0.5, 0.5), normal=(1, 1, -2)),
+
+        vertex(pos=(2, 0), color=(0.5, 0.5, 0.5), normal=(1, 1, -1)),
+        vertex(pos=(2, 3), color=(0.5, 0.5, 0.5), normal=(1, 1, -1)),
+        vertex(pos=(0, 3), color=(0.5, 0.5, 0.5), normal=(1, 1, -1)),
+
+
+        vertex(pos=(0, 3), color=(0.5, 0.5, 0.5), normal=(-1, -1, -2)),
+        vertex(pos=(0, 7), color=(0.5, 0.5, 0.5), normal=(-1, -1, -2)),
+        vertex(pos=(-3, 7), color=(0.5, 0.5, 0.5), normal=(-1, -1, -2)),
+
+        vertex(pos=(0, 3), color=(0.5, 0.5, 0.5), normal=(-1, -1, -1)),
+        vertex(pos=(-3, 7), color=(0.5, 0.5, 0.5), normal=(-1, -1, -1)),
+        vertex(pos=(-2, 3), color=(0.5, 0.5, 0.5), normal=(-1, -1, -1)),
+
+        vertex(pos=(0, 3), color=(0.5, 0.5, 0.5), normal=(1, -1, -2)),
+        vertex(pos=(3, 7), color=(0.5, 0.5, 0.5), normal=(1, -1, -2)),
+        vertex(pos=(0, 7), color=(0.5, 0.5, 0.5), normal=(1, -1, -2)),
+
+        vertex(pos=(0, 3), color=(0.5, 0.5, 0.5), normal=(1, -1, -1)),
+        vertex(pos=(2, 3), color=(0.5, 0.5, 0.5), normal=(1, -1, -1)),
+        vertex(pos=(3, 7), color=(0.5, 0.5, 0.5), normal=(1, -1, -1)),
+
+        vertex(pos=(-3, 7), color=(0.5, 0.5, 0.5), normal=(1, -1, -1)),
+    ]
+    return verts, []
 
 
 player_radius = 0.5
 small_asteroid_radius = 2
 basic_shot_radius = 0.1
 basic_shot_verts, basic_shot_inds = get_eq_poly_verts(basic_shot_radius, 10)
-player_verts, player_inds = get_eq_poly_verts(player_radius, 10)
+player_verts, player_inds = get_player_verts()
 small_asteroid_verts, small_asteroid_inds = get_eq_poly_verts(small_asteroid_radius, 10)
 hud_obj_verts, hud_obj_inds = get_eq_poly_verts(5, 4)
 font_verts = []
@@ -61,7 +125,7 @@ out = {
         "radius": player_radius,
         "vertices": player_verts,
         "indices": player_inds,
-        "rotation": 0, 
+        "rotation": 90, 
         "velocity": [0, 0],
     },
     "objects": [

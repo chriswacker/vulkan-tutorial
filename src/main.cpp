@@ -77,6 +77,7 @@ struct SwapChainSupportDetails {
 struct Vertex {
     glm::vec2 pos;
     glm::vec3 color;
+    glm::vec3 normal;
 
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription{};
@@ -86,8 +87,8 @@ struct Vertex {
         return bindingDescription;
     }
 
-    static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions() {
-        std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
+    static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() {
+        std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
         attributeDescriptions[0].binding = 0;
         attributeDescriptions[0].location = 0;
         attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;;
@@ -97,6 +98,11 @@ struct Vertex {
         attributeDescriptions[1].location = 1;
         attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
         attributeDescriptions[1].offset = offsetof(Vertex, color);
+
+        attributeDescriptions[2].binding = 0;
+        attributeDescriptions[2].location = 2;
+        attributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescriptions[2].offset = offsetof(Vertex, normal);
 
         return attributeDescriptions;
     }
@@ -110,7 +116,8 @@ struct GamePlayer {
     glm::vec2 position;
     float rotation;
     glm::vec2 velocity;
-    uint32_t indexCount = 0;
+    uint32_t vertexCount;
+    uint32_t indexCount;
     float radius;
 };
 
@@ -435,6 +442,7 @@ private:
         std::vector<glm::mat4> modelMatrices{};
 
         glm::mat4 playerModel = glm::translate(glm::mat4(1.0f), glm::vec3(gameState.player.position, 0.0f));
+        playerModel = glm::scale(playerModel, glm::vec3(0.1f));
         playerModel = glm::rotate(playerModel, gameState.player.rotation, glm::vec3(0.0f, 0.0f, 1.0f));
 
         modelMatrices.push_back(playerModel);
@@ -481,7 +489,7 @@ private:
             (inputState.mousePos.y / HEIGHT) * 2.0 - 1.0,
         });
 
-        gameState.player.rotation = atan2(direction.y, direction.x);
+        gameState.player.rotation = atan2(direction.y, direction.x) + glm::radians(90.0f);
 
         if (inputState.keys[GLFW_KEY_W]) {
             gameState.player.velocity += direction * accel * delta;
@@ -871,7 +879,7 @@ private:
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
         VkVertexInputBindingDescription bindingDescription = Vertex::getBindingDescription();
-        std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions = Vertex::getAttributeDescriptions();
+        std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions = Vertex::getAttributeDescriptions();
 
         vertexInputInfo.vertexBindingDescriptionCount = 1;
         vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
@@ -1041,13 +1049,18 @@ private:
         player.velocity = { jPlayer["velocity"][0].get<float>(), jPlayer["velocity"][1].get<float>() };
         player.radius = jPlayer["radius"];
 
+        player.vertexCount = 0;
         for (const auto& vert : jPlayer["vertices"]) {
             Vertex vertex{};
-            vertex.pos = { vert[0].get<float>(), vert[1].get<float>() };
-            vertex.color = {0.0f, 0.0f, 1.0f};
+            vertex.pos = { vert["pos"][0].get<float>(), vert["pos"][1].get<float>() };
+            vertex.color = { vert["color"][0].get<float>(), vert["color"][1].get<float>(), vert["color"][2].get<float>() };
+            vertex.normal = { vert["normal"][0].get<float>(), vert["normal"][1].get<float>(), vert["normal"][2].get<float>() };
+
+            player.vertexCount++;
             vertices.push_back(vertex);
         }
 
+        player.indexCount = 0;
         for (const auto& ind : jPlayer["indices"]) {
             player.indexCount++;
             indices.push_back(ind);
@@ -1613,7 +1626,8 @@ private:
         }
 
         // Draw player
-        vkCmdDrawIndexed(commandBuffer, gameState.player.indexCount, 1, 0, 0, 0);
+        // vkCmdDrawIndexed(commandBuffer, gameState.player.indexCount, 1, 0, 0, 0);
+        vkCmdDraw(commandBuffer, gameState.player.vertexCount, 1, 0, 0);
 
         // Draw HUD
         dynamicOffset += dynamicUBOAlignment;
