@@ -112,38 +112,42 @@ struct UniformBufferObject {
     glm::mat4 proj;
 };
 
-struct GamePlayer {
-    glm::vec2 position;
-    float rotation;
-    glm::vec2 velocity;
-    uint32_t vertexCount;
-    uint32_t indexCount;
+struct GameObject {
+    uint32_t id;
+    std::string name;
+    std::vector<GameInstance> instances;
     float radius;
+    uint16_t health;
+    uint16_t damage;
+
+    uint32_t indexCount = 0;
+    int32_t vertexOffset;
+    uint32_t firstIndex;
+    uint32_t firstInstance;
 };
 
 struct GameInstance {
     glm::vec2 position;
     float rotation;
     glm::vec2 velocity;
-
-    glm::mat4 model;
     float deleteAt;
     bool deleteMe;
     uint16_t health;
     uint16_t damage;
+
+    // Render
+    glm::mat4 model;
 };
 
-struct GameObject {
-    uint32_t id;
-    std::string name;
-    uint32_t indexCount = 0;
-    int32_t vertexOffset;
-    uint32_t firstIndex;
-    uint32_t firstInstance;
-    std::vector<GameInstance> instances;
+struct GamePlayer {
+    glm::vec2 position;
+    float rotation;
+    glm::vec2 velocity;
     float radius;
-    uint16_t health;
-    uint16_t damage;
+
+    // Render
+    uint32_t vertexCount;
+    uint32_t indexCount;
 };
 
 struct GameText {

@@ -1,0 +1,33 @@
+GameState
+    player Entity & EntityInstance
+    entities Entity[]
+        - name
+        - vertices Vertex[]
+            - position
+            - color
+            - normal
+        - indices int[]
+        - radius
+        - maxHealth
+        - damage
+        - instances GameInstance{id}
+            - position
+            - rotation
+            - velocity
+            - scale
+            - health
+            - deleteMe
+            - deleteAt
+    hud[]
+    animations {id}
+
+RenderState 
+    player EntityRender & EntityInstanceRender[]
+    entities EntityRender[]
+        - indexCount
+        - firstIndex
+        - vertexOffset
+        - firstInstance
+        - instances EntityInstanceRender[]
+            - model
+    hud RenderEntity[]
