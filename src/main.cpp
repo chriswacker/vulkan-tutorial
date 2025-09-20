@@ -112,21 +112,7 @@ struct UniformBufferObject {
     glm::mat4 proj;
 };
 
-struct GameObject {
-    uint32_t id;
-    std::string name;
-    std::vector<GameInstance> instances;
-    float radius;
-    uint16_t health;
-    uint16_t damage;
-
-    uint32_t indexCount = 0;
-    int32_t vertexOffset;
-    uint32_t firstIndex;
-    uint32_t firstInstance;
-};
-
-struct GameInstance {
+struct EntityInstance {
     glm::vec2 position;
     float rotation;
     glm::vec2 velocity;
@@ -139,7 +125,21 @@ struct GameInstance {
     glm::mat4 model;
 };
 
-struct GamePlayer {
+struct Entity {
+    uint32_t id;
+    std::string name;
+    std::vector<EntityInstance> instances;
+    float radius;
+    uint16_t health;
+    uint16_t damage;
+
+    uint32_t indexCount = 0;
+    int32_t vertexOffset;
+    uint32_t firstIndex;
+    uint32_t firstInstance;
+};
+
+struct Player {
     glm::vec2 position;
     float rotation;
     glm::vec2 velocity;
@@ -150,20 +150,32 @@ struct GamePlayer {
     uint32_t indexCount;
 };
 
-struct GameText {
+struct Text {
     std::string text;
     glm::vec2 position;
     glm::vec2 scale;
 };
 
 struct GameState {
-    GamePlayer player;
+    Player player;
     int32_t fontVertexOffset;
-    std::unordered_map<char, GameObject> fontCharacters;
-    std::vector<GameObject> objects;
-    std::vector<GameObject> projectiles;
-    std::vector<GameObject> hudObjects;
-    std::vector<GameText> hudText;
+    std::unordered_map<char, Entity> fontCharacters;
+    std::vector<Entity> objects;
+    std::vector<Entity> projectiles;
+    std::vector<Entity> hudObjects;
+    std::vector<Text> hudText;
+};
+
+struct EntityRender {
+};
+
+struct EntityInstanceRender {
+};
+
+struct PlayerRender {
+};
+
+struct RenderState {
 };
 
 struct InputState {
@@ -367,6 +379,7 @@ private:
 
         updateInputState();
         updateGameState();
+        updateRenderState();
         updateUniformBuffer(currentFrame);
         updateStorageBuffer(currentFrame);
 
@@ -451,22 +464,22 @@ private:
 
         modelMatrices.push_back(playerModel);
 
-        for (GameObject& obj : gameState.objects) {
-            for (GameInstance& inst : obj.instances) {
+        for (Entity& obj : gameState.objects) {
+            for (EntityInstance& inst : obj.instances) {
                 modelMatrices.push_back(inst.model);
             }
         }
 
-        for (GameObject& hudObj : gameState.hudObjects) {
-            for (GameInstance& hudInst : hudObj.instances) {
+        for (Entity& hudObj : gameState.hudObjects) {
+            for (EntityInstance& hudInst : hudObj.instances) {
                 modelMatrices.push_back(hudInst.model);
             }
         }
 
         // for (GameObject& hudText : gameState.)
 
-        for (GameObject& pobj : gameState.projectiles) {
-            for (GameInstance& pinst : pobj.instances) {
+        for (Entity& pobj : gameState.projectiles) {
+            for (EntityInstance& pinst : pobj.instances) {
                 modelMatrices.push_back(pinst.model);
             }
         }
@@ -503,7 +516,7 @@ private:
 
         if (inputState.keys[GLFW_KEY_F]) {
             if (projectileTimer.elapsedSeconds() >= 0.2) {
-                GameInstance proj{};
+                EntityInstance proj{};
                 proj.position = gameState.player.position;
                 proj.velocity = gameState.player.velocity + direction * 10.0f;
                 proj.rotation = 0;
@@ -517,19 +530,19 @@ private:
 
         uint32_t instanceCount = 0;
 
-        for (GameObject& obj : gameState.objects) {
+        for (Entity& obj : gameState.objects) {
             // update first instance for draw to index correct model in SSBO
             obj.firstInstance = 1 + instanceCount;
 
             // Deletion
-            obj.instances.erase(std::remove_if(obj.instances.begin(), obj.instances.end(), [gameTime](GameInstance inst) {
+            obj.instances.erase(std::remove_if(obj.instances.begin(), obj.instances.end(), [gameTime](EntityInstance inst) {
                 return inst.deleteMe || (inst.deleteAt != 0 && inst.deleteAt <= gameTime);
             }), obj.instances.end());
 
             // keep track of instance count after any deletions
             instanceCount += obj.instances.size();
 
-            for (GameInstance& inst : obj.instances) {
+            for (EntityInstance& inst : obj.instances) {
                 // Player collision
                 if (collisionBuffer == 0) {
                     bool collision = checkCircleCollision(gameState.player.position, inst.position, gameState.player.radius, obj.radius);
@@ -541,8 +554,8 @@ private:
                 }
 
                 // Projectile collision
-                for (GameObject& pObj : gameState.projectiles) {
-                    for (GameInstance& proj : pObj.instances) {
+                for (Entity& pObj : gameState.projectiles) {
+                    for (EntityInstance& proj : pObj.instances) {
                         bool collision = checkCircleCollision(inst.position, proj.position, obj.radius, pObj.radius);
                         if (collision) {
                             // decrement asteroid health
@@ -562,23 +575,23 @@ private:
             }
         }
 
-        for (GameObject& hudObj : gameState.hudObjects) {
+        for (Entity& hudObj : gameState.hudObjects) {
             hudObj.firstInstance = 1 + instanceCount;
             instanceCount += hudObj.instances.size();
         }
 
         // update projectile models
-        for (GameObject& pObj : gameState.projectiles) {
+        for (Entity& pObj : gameState.projectiles) {
             pObj.firstInstance = 1 + instanceCount;
 
             // Deletion
-            pObj.instances.erase(std::remove_if(pObj.instances.begin(), pObj.instances.end(), [gameTime](GameInstance inst) {
+            pObj.instances.erase(std::remove_if(pObj.instances.begin(), pObj.instances.end(), [gameTime](EntityInstance inst) {
                 return inst.deleteMe || (inst.deleteAt != 0 && inst.deleteAt <= gameTime);
             }), pObj.instances.end());
 
             instanceCount += pObj.instances.size();
 
-            for (GameInstance& proj : pObj.instances) {
+            for (EntityInstance& proj : pObj.instances) {
                 proj.position += proj.velocity * delta;
                 proj.model = glm::translate(glm::mat4(1.0f), glm::vec3(proj.position, 0.0f));
             }
@@ -587,6 +600,9 @@ private:
         if (collisionBuffer > 0) collisionBuffer--;
 
         gameState.player.position += gameState.player.velocity * delta;
+    }
+
+    void updateRenderState() {
     }
 
     void createInstance() {
@@ -1047,7 +1063,7 @@ private:
         json data = json::parse(file);
 
         json jPlayer = data["player"];
-        GamePlayer player{};
+        Player player{};
         player.position = { jPlayer["position"][0].get<float>(), jPlayer["position"][1].get<float>() };
         player.rotation = jPlayer["rotation"].get<float>();
         player.velocity = { jPlayer["velocity"][0].get<float>(), jPlayer["velocity"][1].get<float>() };
@@ -1073,7 +1089,7 @@ private:
         gameState.player = player; 
 
         for (const auto& obj : data["objects"]) {
-            GameObject gObj;
+            Entity gObj;
             gObj.id = obj["id"];
             gObj.name = obj["name"];
             gObj.vertexOffset = vertices.size();
@@ -1096,7 +1112,7 @@ private:
             }
 
             for (const auto& inst : obj["instances"]) {
-                GameInstance gInst{};
+                EntityInstance gInst{};
                 auto pos = inst["position"];
                 auto vel = inst["velocity"];
                 gInst.position = { pos[0].get<float>(), pos[1].get<float>() };
@@ -1111,7 +1127,7 @@ private:
         }
 
         for (const auto& proj : data["projectiles"]) {
-            GameObject gproj;
+            Entity gproj;
             gproj.id = proj["id"];
             gproj.name = proj["name"];
             gproj.vertexOffset = vertices.size();
@@ -1147,7 +1163,7 @@ private:
         }
 
         for (const auto& character : data["font"]["characters"]) {
-            GameObject fontChar{};
+            Entity fontChar{};
             fontChar.firstIndex = indices.size();
             std::string c = character["char"];
 
@@ -1161,13 +1177,13 @@ private:
 
         for (const auto& hudTxt : data["hud"]["text"]) {
             std::string text = hudTxt["text"];
-            std::unordered_map<char, GameObject> charObjs;
+            std::unordered_map<char, Entity> charObjs;
             glm::vec2 wordPos = { hudTxt["position"][0].get<float>(), hudTxt["position"][1].get<float>() };
             glm::vec2 scale = { hudTxt["scale"][0].get<float>(), hudTxt["scale"][1].get<float>() };
             int charCount = 0;
             for (char c : text) {
                 if (charObjs.find(c) == charObjs.end()) {
-                    GameObject charObj{};
+                    Entity charObj{};
                     charObj.vertexOffset = gameState.fontVertexOffset;
                     charObj.firstIndex = gameState.fontCharacters[c].firstIndex;
                     charObj.indexCount = gameState.fontCharacters[c].indexCount;
@@ -1175,7 +1191,7 @@ private:
                     charObjs[c] = charObj;
                 }
 
-                GameInstance charInst{};
+                EntityInstance charInst{};
                 charInst.position = wordPos + glm::vec2(11 * scale.x * charCount, 0.0f);
                 glm::mat4 model = glm::translate(glm::mat4(1.0), glm::vec3(charInst.position, 0.0));
                 model = glm::scale(model, glm::vec3(scale, 0.0f));
@@ -1190,7 +1206,7 @@ private:
         }
 
         for (const auto& hud : data["hud"]["objects"]) {
-            GameObject hudObj;
+            Entity hudObj;
             hudObj.vertexOffset = vertices.size();
             hudObj.firstIndex = indices.size();
             hudObj.firstInstance = 1 + getTotalInstanceCount();
@@ -1208,7 +1224,7 @@ private:
             }
 
             for (const auto& inst : hud["instances"]) {
-                GameInstance hudInst{};
+                EntityInstance hudInst{};
                 auto pos = inst["position"];
                 hudInst.position = { pos[0].get<float>(), pos[1].get<float>() };
                 glm::mat4 model = glm::translate(glm::mat4(1.0), glm::vec3(hudInst.position, 0.0));
@@ -1230,10 +1246,10 @@ private:
 
     size_t getTotalInstanceCount() {
         size_t count = 0;
-        for (GameObject& obj : gameState.objects) {
+        for (Entity& obj : gameState.objects) {
             count += obj.instances.size();
         }
-        for (GameObject& obj : gameState.hudObjects) {
+        for (Entity& obj : gameState.hudObjects) {
             count += obj.instances.size();
         }
         return count;
